@@ -21,7 +21,7 @@
                     <th class="card_end">退勤</th>
                     <th class="card_break">休憩</th>
                     <th class="card_work_minutes">合計</th>
-
+<th class="card_wage">日給</th>
                     <th class="card_action">操作</th>
                 </tr>
                 <c:forEach var="card" items="${cards}" varStatus="status">
@@ -32,6 +32,8 @@
                         <td class="card_end">${card.end}</td>
                         <td class="card_break">${card.employee.break_time }</td>
                         <td class="card_work_minutes">${card.work_minutes}</td>
+                                                <td class="card_wage"><fmt:formatNumber value='${card.wage}' pattern='###,###円'/></td>
+
 
 <c:choose>
 <c:when test="${empty card.end }">

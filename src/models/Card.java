@@ -71,6 +71,8 @@ public class Card {
 
 
 
+
+
 	public String getWork_minutes() {
 		return work_minutes;
 	}

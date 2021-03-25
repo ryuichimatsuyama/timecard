@@ -59,7 +59,7 @@ public class TopPageIndexServlet extends HttpServlet {
 			String break_time = login_employee.getBreak_time();
 			// 休憩時間を分に直す
 			String[] split = break_time.split(":");
-			long minutes1 = TimeUnit.HOURS.toMinutes(Integer.parseInt(split[0]))+ Integer.parseInt(split[1]);
+			long minutes1 = TimeUnit.HOURS.toMinutes(Integer.parseInt(split[0])) + Integer.parseInt(split[1]);
 			String[] split_start = start.split(":");
 			LocalTime start_localtime = LocalTime.of(Integer.parseInt(split_start[0]),
 					Integer.parseInt(split_start[1]));
@@ -74,10 +74,13 @@ public class TopPageIndexServlet extends HttpServlet {
 				// 労働時間から休憩時間を引いて時間に直す
 				Duration d = Duration.ofMinutes(minutes - minutes1);
 				LocalTime time = LocalTime.MIN.plus(d);
-
 				String output = time.toString();
 				card.setWork_minutes(output);
-
+				// 日給を計算するために分に変換
+				String[] split1 = output.split(":");
+				long minutes2 = TimeUnit.HOURS.toMinutes(Integer.parseInt(split1[0])) + Integer.parseInt(split1[1]);
+				long wage = Long.parseLong(login_employee.getWage());
+				card.setWage(wage * minutes2 / 60);
 			}
 		}
 
