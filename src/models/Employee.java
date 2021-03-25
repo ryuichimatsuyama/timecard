@@ -12,58 +12,47 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Table(name = "employees")
-@NamedQueries({
-    @NamedQuery(
-        name = "getAllEmployees",
-        query = "SELECT e FROM Employee AS e ORDER BY e.id DESC"
-    ),
-    @NamedQuery(
-        name = "getEmployeesCount",
-        query = "SELECT COUNT(e) FROM Employee AS e"
-    ),
-    @NamedQuery(
-        name = "checkRegisteredCode",
-        query = "SELECT COUNT(e) FROM Employee AS e WHERE e.code = :code"
-    ),
-    @NamedQuery(
-        name = "checkLoginCodeAndPassword",
-        query = "SELECT e FROM Employee AS e WHERE e.delete_flag = 0 AND e.code = :code AND e.password = :pass"
-    )
+@NamedQueries({ @NamedQuery(name = "getAllEmployees", query = "SELECT e FROM Employee AS e ORDER BY e.id DESC"),
+		@NamedQuery(name = "getEmployeesCount", query = "SELECT COUNT(e) FROM Employee AS e"),
+		@NamedQuery(name = "checkRegisteredCode", query = "SELECT COUNT(e) FROM Employee AS e WHERE e.code = :code"),
+		@NamedQuery(name = "checkLoginCodeAndPassword", query = "SELECT e FROM Employee AS e WHERE e.delete_flag = 0 AND e.code = :code AND e.password = :pass"),
+		@NamedQuery(name = "getBossCandidates", query = "SELECT e FROM Employee AS e where not e.id = :id ")
+
 })
 @Entity
 
 public class Employee {
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+	@Id
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-    @Column(name = "code", nullable = false, unique = true)
-    private String code;
+	@Column(name = "code", nullable = false, unique = true)
+	private String code;
 
-    @Column(name = "name", nullable = false)
-    private String name;
+	@Column(name = "name", nullable = false)
+	private String name;
 
-    @Column(name = "password", length = 64, nullable = false)
-    private String password;
+	@Column(name = "password", length = 64, nullable = false)
+	private String password;
 
-    @Column(name = "admin_flag", nullable = false)
-    private Integer admin_flag;
+	@Column(name = "admin_flag", nullable = false)
+	private Integer admin_flag;
 
-    @Column(name = "created_at", nullable = false)
-    private Timestamp created_at;
+	@Column(name = "created_at", nullable = false)
+	private Timestamp created_at;
 
-    @Column(name = "updated_at", nullable = false)
-    private Timestamp updated_at;
+	@Column(name = "updated_at", nullable = false)
+	private Timestamp updated_at;
 
-    @Column(name = "delete_flag", nullable = false)
-    private Integer delete_flag;
+	@Column(name = "delete_flag", nullable = false)
+	private Integer delete_flag;
 
-    @Column(name="wage",nullable=false)
-    private String wage;
+	@Column(name = "wage", nullable = false)
+	private String wage;
 
-    @Column(name="break_time",nullable=false)
-    private String break_time;
+	@Column(name = "break_time", nullable = false)
+	private String break_time;
 
 	public Integer getId() {
 		return id;
