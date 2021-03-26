@@ -45,6 +45,8 @@ public class CardCreateServlet extends HttpServlet {
 		r.setEmployee((Employee) request.getSession().getAttribute("login_employee"));
 		Date work_date = new Date(System.currentTimeMillis());
 		r.setWork_date(work_date);
+		// 投稿すると状態は未承認になる
+		r.setStatus(1);
 		// 現在時刻を求める
 		LocalDateTime now = LocalDateTime.now();
 		DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm");

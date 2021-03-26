@@ -10,8 +10,7 @@
             </div>
         </c:if>
 
-        <h2>勤怠管理システムへようこそ</h2>
-                <h3>【自分の勤怠　一覧】</h3>
+        <h2>承認待ち一覧</h2>
         <table id="card_list">
             <tbody>
                 <tr>
@@ -23,7 +22,6 @@
                     <th class="card_work_minutes">合計</th>
 <th class="card_wage">日給</th>
 <th class="card_status">状態</th>
-
                     <th class="card_action">操作</th>
                 </tr>
                 <c:forEach var="card" items="${cards}" varStatus="status">
@@ -35,7 +33,7 @@
                         <td class="card_break">${card.employee.break_time }</td>
                         <td class="card_work_minutes">${card.work_minutes}</td>
                                                 <td class="card_wage"><fmt:formatNumber value='${card.wage}' pattern='###,###円'/></td>
-                        <td class="card_status"><c:choose><c:when test="${card.status==0 }">承認済</c:when>
+                        <td class="card_status"><c:choose><c:when test="${card.status==0 }">合格</c:when>
                         <c:otherwise>未承認</c:otherwise></c:choose></td>
 
 

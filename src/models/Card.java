@@ -16,50 +16,43 @@ import javax.persistence.Table;
 
 @Table(name = "times")
 @NamedQueries({
-    @NamedQuery(
-        name = "getMyAllTimes",
-        query = "SELECT r FROM Card AS r where r.employee=:employee ORDER BY r.id DESC"
-    ),
-    @NamedQuery(
-        name = "getMyTimesCount",
-        query = "SELECT COUNT(r) FROM Card AS r where r.employee=:employee"
-    )
-})
+		@NamedQuery(name = "getMyAllTimes", query = "SELECT r FROM Card AS r where r.employee=:employee ORDER BY r.id DESC"),
+		@NamedQuery(name = "getMyTimesCount", query = "SELECT COUNT(r) FROM Card AS r where r.employee=:employee"),
+		@NamedQuery(name = "getBossCards", query = "SELECT r FROM Card AS r WHERE r.boss = :boss  ORDER BY r.id DESC"),
+		@NamedQuery(name = "getBossCount", query = "SELECT COUNT(r) FROM Card AS r WHERE r.boss = :boss ")
 
+})
 
 @Entity
 
-
 public class Card {
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+	@Id
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
 
-    @ManyToOne
-    @JoinColumn(name = "employee_id", nullable = false)
-    private Employee employee;
+	@ManyToOne
+	@JoinColumn(name = "employee_id", nullable = false)
+	private Employee employee;
 
-    @Column(name = "work_date",nullable=false)
-    private Date work_date;
-    @OneToOne
-    @JoinColumn(name = "boss_id")
-    private Employee boss;
+	@Column(name = "work_date", nullable = false)
+	private Date work_date;
+	@OneToOne
+	@JoinColumn(name = "boss_id")
+	private Employee boss;
 
+	@Column(name = "status")
+	private Integer status;
 
-    @Column(name = "status")
-    private Integer status;
+	@Column(name = "start", nullable = false)
+	private String start;
 
-    @Column(name = "start", nullable = false)
-    private String start;
+	@Column(name = "end")
+	private String end;
 
-    @Column(name = "end")
-    private String end;
+	private String work_minutes;
 
-    private String work_minutes;
-
-    private long wage;
-
+	private long wage;
 
 	public long getWage() {
 		return wage;
@@ -68,10 +61,6 @@ public class Card {
 	public void setWage(long wage) {
 		this.wage = wage;
 	}
-
-
-
-
 
 	public String getWork_minutes() {
 		return work_minutes;
@@ -136,6 +125,5 @@ public class Card {
 	public void setEnd(String end) {
 		this.end = end;
 	}
-
 
 }
