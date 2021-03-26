@@ -24,8 +24,9 @@
 
 
 <input type="hidden" name="_token" value="${_token}" />
+<c:if test="${!empty relations }">
 <button type="submit">退勤</button>
-
+</c:if>
                 </form>
             </c:when>
             <c:otherwise>

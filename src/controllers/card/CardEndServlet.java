@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import models.Card;
+import models.Employee;
 import utils.DBUtil;
 
 /**
@@ -34,9 +35,13 @@ public class CardEndServlet extends HttpServlet {
         String _token = (String)request.getParameter("_token");
         if(_token != null && _token.equals(request.getSession().getId())) {
             EntityManager em = DBUtil.createEntityManager();
+			// 該当の上司の従業員情報１件のみをデータベースから取得
+			Employee boss = em.find(Employee.class, Integer.parseInt(request.getParameter("boss")));
+
 
             Card r = em.find(Card.class, (Integer)(request.getSession().getAttribute("card_id")));
             r.setEnd(request.getParameter("end"));
+            r.setBoss(boss);
 
             em.getTransaction().begin();
             em.getTransaction().commit();

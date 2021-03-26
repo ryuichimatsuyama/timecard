@@ -7,7 +7,7 @@
                 <c:out value="${flush}"></c:out>
             </div>
         </c:if>
-        <h2>上司　一覧</h2>
+        <h2>自分の上司　一覧</h2>
         <table id="relation_list">
             <tbody>
                 <tr>

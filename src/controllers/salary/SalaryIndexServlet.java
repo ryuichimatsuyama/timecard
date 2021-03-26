@@ -62,72 +62,52 @@ public class SalaryIndexServlet extends HttpServlet {
 			String[] values = work_date.toString().split("-");
 			tmp_year = values[0];
 			tmp_month = values[1];
-			if(tmp_year.equals(init_values[0]) && tmp_month.equals(init_values[1])){
+			String start = card.getStart();
+			String end = card.getEnd();
+			String break_time = login_employee.getBreak_time();
+			// 休憩時間を分に直す
+			String[] split = break_time.split(":");
+			long minutes1 = TimeUnit.HOURS.toMinutes(Integer.parseInt(split[0])) + Integer.parseInt(split[1]);
+			String[] split_start = start.split(":");
+			LocalTime start_localtime = LocalTime.of(Integer.parseInt(split_start[0]),
+					Integer.parseInt(split_start[1]));
+			String[] split_end = end.split(":");
+			LocalTime end_localtime = LocalTime.of(Integer.parseInt(split_end[0]),
+					Integer.parseInt(split_end[1]));
+			// 出退勤の差分を求めて分に直す
+			long minutes = ChronoUnit.MINUTES.between(start_localtime, end_localtime);
+
+			if(tmp_year.equals(year) && tmp_month.equals(month)){
 				year = tmp_year;
 				month = tmp_month;
-				String start = card.getStart();
-				String end = card.getEnd();
-				String break_time = login_employee.getBreak_time();
-				// 休憩時間を分に直す
-				String[] split = break_time.split(":");
-				long minutes1 = TimeUnit.HOURS.toMinutes(Integer.parseInt(split[0])) + Integer.parseInt(split[1]);
-				String[] split_start = start.split(":");
-				LocalTime start_localtime = LocalTime.of(Integer.parseInt(split_start[0]),
-						Integer.parseInt(split_start[1]));
-				String[] split_end = end.split(":");
-				LocalTime end_localtime = LocalTime.of(Integer.parseInt(split_end[0]),
-						Integer.parseInt(split_end[1]));
-				// 出退勤の差分を求めて分に直す
-				long minutes = ChronoUnit.MINUTES.between(start_localtime, end_localtime);
-				System.out.println(minutes);
-				System.out.println(minutes1);
-				System.out.println(minutes - minutes1);
 				total_time  += minutes - minutes1;
-				System.out.println("total_time: " + total_time);
 				days++;
-				salary = new Salary();
-				salary.setDays(days);
-				days = 0;
-				salary.setYear_month(year + "- "+ month);
-				salary.setTotal_time(total_time);
-				total_time = 0;
-				salary.setWage(Integer.parseInt(login_employee.getWage()));
-				salary.setSalary((int)(Integer.parseInt(login_employee.getWage()) * total_time / 60.0));
-				salary_list.add(salary);
 			}else{
-//				private long salary;
-//
-//				private Integer days;
-//
-//				private String year_month;
-//
-//				private long total_time;
-//
-//				private Integer wage;
+				Salary salary1=new Salary();
+				salary1.setDays(days);
+				salary1.setTotal_time(total_time);
+				salary_list.add(salary1);
+				total_time=0;
+				days=0;
+				total_time+=minutes-minutes1;
+				days++;
+				year=tmp_year;
+				month=tmp_year;
 			}
-//			// 月給を計算するために分に変換
-//			String[] split1 = output.split(":");
-//			long minutes2 = TimeUnit.HOURS.toMinutes(Integer.parseInt(split1[0])) + Integer.parseInt(split1[1]);
-//
-//			if (values[0].equals(year) && values[1].equals(month)) {
-//					total_time = minutes2;
-//					days++;
-//			} else {
-//				Salary salarys = new Salary();
-//				salarys.setSalary(salary);
-//				salary_list.add(salarys);
-//				days = 0;
-//				total_time = 0;
-//			}
 		}
+		Salary salary1=new Salary();
+		salary1.setDays(days);
+		salary1.setTotal_time(total_time);
+		salary_list.add(salary1);
+
 		for(Salary s : salary_list){
 			System.out.println("年月" + s.getYear_month());
 			System.out.println("出勤日数: " + s.getDays());
 			System.out.println("労働時間: " + s.getTotal_time() + "分");
 			System.out.println("月給: " + s.getSalary());
-		}
+				}
 		em.close();
-		request.setAttribute("salary", salary_list);
+		request.setAttribute("salary_list", salary_list);
 		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/salary/index.jsp");
 		rd.forward(request, response);
 	}
