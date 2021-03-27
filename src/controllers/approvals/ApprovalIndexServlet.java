@@ -44,6 +44,7 @@ public class ApprovalIndexServlet extends HttpServlet {
 
 		Employee login_employee = (Employee) request.getSession().getAttribute("login_employee");
 
+
 		int page;
 		try {
 			page = Integer.parseInt(request.getParameter("page"));
@@ -56,7 +57,7 @@ public class ApprovalIndexServlet extends HttpServlet {
 		for (Card card : cards) {
 			String start = card.getStart();
 			String end = card.getEnd();
-			String break_time = login_employee.getBreak_time();
+			String break_time = card.getEmployee().getBreak_time();
 			// 休憩時間を分に直す
 			String[] split = break_time.split(":");
 			long minutes1 = TimeUnit.HOURS.toMinutes(Integer.parseInt(split[0])) + Integer.parseInt(split[1]);
@@ -79,7 +80,7 @@ public class ApprovalIndexServlet extends HttpServlet {
 				// 日給を計算するために分に変換
 				String[] split1 = output.split(":");
 				long minutes2 = TimeUnit.HOURS.toMinutes(Integer.parseInt(split1[0])) + Integer.parseInt(split1[1]);
-				long wage = Long.parseLong(login_employee.getWage());
+				long wage = Long.parseLong(card.getEmployee().getWage());
 				card.setWage(wage * minutes2 / 60);
 			}
 		}

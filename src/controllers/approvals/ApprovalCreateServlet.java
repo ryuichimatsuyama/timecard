@@ -1,9 +1,8 @@
-package controllers.card;
+package controllers.approvals;
 
 import java.io.IOException;
 
 import javax.persistence.EntityManager;
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,16 +13,16 @@ import models.Card;
 import utils.DBUtil;
 
 /**
- * Servlet implementation class CardEditServlet
+ * Servlet implementation class ApprovalCreateServlet
  */
-@WebServlet("/card/edit")
-public class CardEditServlet extends HttpServlet {
+@WebServlet("/approvals/create")
+public class ApprovalCreateServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public CardEditServlet() {
+    public ApprovalCreateServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -33,17 +32,7 @@ public class CardEditServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		EntityManager em = DBUtil.createEntityManager();
-		// セッションスコープから日報のidを取得して該当のidの日報１件のみをデータベースから取得
-		Card c = em.find(Card.class, Integer.parseInt(request.getParameter("id")));
-
-		em.close();
-		request.setAttribute("_token", request.getSession().getId());
-		request.setAttribute("card", c);
-		request.getSession().setAttribute("card_id", c.getId());
-
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/cards/edit.jsp");
-		rd.forward(request, response);
+		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
 
 	/**
@@ -51,7 +40,21 @@ public class CardEditServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doGet(request, response);
+		EntityManager em = DBUtil.createEntityManager();
+		// セッションスコープからカードのidを取得して該当のidのカード１件のみをデータベースから取得
+
+		Card c = em.find(Card.class, (Integer) (request.getSession().getAttribute("card_id")));
+		c.setStart(request.getParameter("start_time"));
+		c.setEnd(request.getParameter("end_time"));
+		// 状態を承認に更新する
+		c.setStatus(0);
+		em.getTransaction().begin();
+		em.getTransaction().commit();
+		em.close();
+		request.getSession().setAttribute("flush", "承認しました。");
+		request.getSession().removeAttribute("card_id");
+
+		response.sendRedirect(request.getContextPath() + "/index.html");
 	}
 
 }

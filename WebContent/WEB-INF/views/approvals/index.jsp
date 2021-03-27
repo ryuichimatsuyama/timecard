@@ -20,7 +20,7 @@
                     <th class="card_end">退勤</th>
                     <th class="card_break">休憩</th>
                     <th class="card_work_minutes">合計</th>
-<th class="card_wage">日給</th>
+                    <th class="card_wage">日給</th>
 <th class="card_status">状態</th>
                     <th class="card_action">操作</th>
                 </tr>
@@ -32,8 +32,9 @@
                         <td class="card_end">${card.end}</td>
                         <td class="card_break">${card.employee.break_time }</td>
                         <td class="card_work_minutes">${card.work_minutes}</td>
-                                                <td class="card_wage"><fmt:formatNumber value='${card.wage}' pattern='###,###円'/></td>
-                        <td class="card_status"><c:choose><c:when test="${card.status==0 }">合格</c:when>
+                                                                        <td class="card_wage"><fmt:formatNumber value='${card.wage}' pattern='###,###円'/></td>
+
+                        <td class="card_status"><c:choose><c:when test="${card.status==0 }">承認済</c:when>
                         <c:otherwise>未承認</c:otherwise></c:choose></td>
 
 
@@ -67,6 +68,5 @@
             </c:forEach>
         </div>
 
-        <p><a href="<c:url value='/cards/create' />">出勤</a></p>
     </c:param>
 </c:import>

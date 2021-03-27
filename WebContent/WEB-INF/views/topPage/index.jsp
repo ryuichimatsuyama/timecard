@@ -45,10 +45,6 @@
 <c:when test="${empty card.end }">
                         <td class="card_action"><a href="<c:url value='/card/boss?id=${card.id}' />">退勤</a></td>
                         </c:when>
-                        <c:otherwise>
-                                                <td class="card_action"><a href="<c:url value='/card/edit?id=${card.id}' />">編集</a></td>
-
-                        </c:otherwise>
                         </c:choose>
                     </tr>
                 </c:forEach>
@@ -68,7 +64,6 @@
                 </c:choose>
             </c:forEach>
         </div>
-
         <p><a href="<c:url value='/cards/create' />">出勤</a></p>
     </c:param>
 </c:import>

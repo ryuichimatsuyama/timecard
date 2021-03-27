@@ -29,10 +29,6 @@
 
 
 
-<label for="review">レビュー</label>
-<br />
-<textarea name="review" rows="10" cols="50">${approval.review}</textarea>
-<br/><br/>
 <input type="hidden" name="_token" value="${_token}" />
 <button type="submit">承認</button>
 		</form>
