@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @Table(name = "relations")
 @NamedQueries({
 		@NamedQuery(name = "getMyBossCount", query = "select count(r)from Relation as r where r.employee=:employee"),
-		@NamedQuery(name = "getMyBoss", query = "select r from Relation as r where r.employee=:employee order by r.id desc") })
+		@NamedQuery(name = "getMyBoss", query = "select r from Relation as r where r.boss.delete_flag=0 and r.employee=:employee order by r.id desc") })
 @Entity
 public class Relation {
 	@Id

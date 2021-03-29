@@ -39,73 +39,128 @@ public class SalaryIndexServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stubs
+		// ログイン従業員取得
 		Employee login_employee = (Employee) request.getSession().getAttribute("login_employee");
 		EntityManager em = DBUtil.createEntityManager();
-		List<Card> mycards = em.createNamedQuery("getMyAllTimes", Card.class).setParameter("employee", login_employee)
+		// 自分の承認されたcard一覧取得
+		List<Card> mycards = em.createNamedQuery("getMyApprovedTimes", Card.class).setParameter("employee", login_employee)
 				.getResultList();
-		String year="";
-		String tmp_year="";
-		String month="";
-		String tmp_month="";
-		Integer days = 0;
-//		long salary = 0;
+		int count = 0; // ループカウンター
+		String year = ""; // 注目するcard情報の年
+		String month = ""; // 注目するcard情報の月
+		String pre_year = ""; // 前のcard情報の年
+		String pre_month = ""; // 前のcard情報の月
+		// 注目する月の日数
+		int days = 0;
+		// 注目する月の全労働時間(分)
 		long total_time = 0;
-		Salary salary = null;;
+		// JSPで表示するsalaryリスト
 		List<Salary> salary_list = new ArrayList<Salary>();
-		Date init_work_date = mycards.get(0).getWork_date();
-		String[] init_values = init_work_date.toString().split("-");
-//		System.out.println(init_work_date);
-		for (Card card : mycards) {
-//			System.out.println(salary_list);
-//			System.out.println(card.getId());
+		while(count!=mycards.size()){
+			// 1つのcard情報を抜き出す
+		Card card = mycards.get(count);
+			// 勤務年月を取得
 			Date work_date = card.getWork_date();
+			// - で分離
 			String[] values = work_date.toString().split("-");
-			tmp_year = values[0];
-			tmp_month = values[1];
+			// 年を抜き出す
+			year = values[0];
+			// 月を抜き出す
+			month = values[1];
+			// 出勤時刻取得(xx:xx)
 			String start = card.getStart();
+			// 退勤時刻取得(xx:xx)
 			String end = card.getEnd();
+			// 休憩時間取得(xx:xx)
 			String break_time = login_employee.getBreak_time();
 			// 休憩時間を分に直す
 			String[] split = break_time.split(":");
-			long minutes1 = TimeUnit.HOURS.toMinutes(Integer.parseInt(split[0])) + Integer.parseInt(split[1]);
+			long break_minutes = TimeUnit.HOURS.toMinutes(Integer.parseInt(split[0])) + Integer.parseInt(split[1]);
+			// 出勤時間を分に直す
 			String[] split_start = start.split(":");
-			LocalTime start_localtime = LocalTime.of(Integer.parseInt(split_start[0]),
-					Integer.parseInt(split_start[1]));
+			LocalTime start_time = LocalTime.of(Integer.parseInt(split_start[0]),Integer.parseInt(split_start[1]));
+			// 退勤時間を分に直す
 			String[] split_end = end.split(":");
-			LocalTime end_localtime = LocalTime.of(Integer.parseInt(split_end[0]),
-					Integer.parseInt(split_end[1]));
+			LocalTime end_time = LocalTime.of(Integer.parseInt(split_end[0]),Integer.parseInt(split_end[1]));
 			// 出退勤の差分を求めて分に直す
-			long minutes = ChronoUnit.MINUTES.between(start_localtime, end_localtime);
-
-			if(tmp_year.equals(year) && tmp_month.equals(month)){
-				year = tmp_year;
-				month = tmp_month;
-				total_time  += minutes - minutes1;
+			long minutes = ChronoUnit.MINUTES.between(start_time, end_time);
+			// 最初のデータならば
+			if(count == 0){
+				// 注目する年月の総労働実時間に加算
+				total_time  += (minutes - break_minutes);
+				// 次のcard情報との比較のため保存
+				pre_year = year;
+				pre_month = month;
+				// 労働日数を1増やす
 				days++;
-			}else{
-				Salary salary1=new Salary();
-				salary1.setDays(days);
-				salary1.setTotal_time(total_time);
-				salary_list.add(salary1);
-				total_time=0;
-				days=0;
-				total_time+=minutes-minutes1;
-				days++;
-				year=tmp_year;
-				month=tmp_year;
+				// カウンターを1増やす
+				count++;
+				// 強制的に次のループへ移動
+				continue;
+			}else{ // 2つめ以降のデータならば
+				// 前のデータと比べて年月が一緒ならば
+				if(year.equals(pre_year) && month.equals(pre_month)){
+					// 注目する年月の総労働実時間に加算
+					total_time  += (minutes - break_minutes);
+					// 次のcard情報との比較のため保存
+					pre_year = year;
+					pre_month = month;
+					// 労働日数を1増やす
+					days++;
+					// カウンターを1増やす
+					count++;
+					// 強制的に次のループへ移動
+					continue;
+				}else{ // 前のデータと比べて年月が違ったならば
+					// サラリーインスタンス作成
+					Salary salary = new Salary();
+					// フィールドをセット
+					// 労働日数
+					salary.setDays(days);
+					// 総労働時間(分)
+					salary.setTotal_time(total_time/60);
+					// 年月
+					salary.setYear_month(pre_year + "年" + pre_month + "月");
+					// 時給(円)
+					int wage = Integer.parseInt(login_employee.getWage());
+					salary.setWage(wage);
+					// 月給 = 時給 * (総労働時間(分) / 60.0(分))
+					long money = (long)(wage * (total_time / 60.0));
+					salary.setSalary(money);
+					// リストに追加
+					salary_list.add(salary);
+					// 初期化
+					total_time = 0;
+					days = 0;
+					// 注目する年月の総労働実時間に加算
+					total_time  += (minutes - break_minutes);
+					// 次のcard情報との比較のため保存
+					pre_year = year;
+					pre_month = month;
+					// 労働日数を1増やす
+					days++;
+					// カウンターを1増やす
+					count++;
+				}
 			}
 		}
-		Salary salary1=new Salary();
-		salary1.setDays(days);
-		salary1.setTotal_time(total_time);
-		salary_list.add(salary1);
-
-		for(Salary s : salary_list){
-			System.out.println("年月" + s.getYear_month());
-			System.out.println("出勤日数: " + s.getDays());
-			System.out.println("労働時間: " + s.getTotal_time() + "分");
-			System.out.println("月給: " + s.getSalary());
-				}
+		// サラリーインスタンス作成
+		Salary salary = new Salary();
+		// フィールドをセット
+		// 労働日数
+		salary.setDays(days);
+		// 総労働時間(分)
+		salary.setTotal_time(total_time/60);;
+		// 年月
+		salary.setYear_month(year + "年" + month + "月");
+		// 時給(円)
+		int wage = Integer.parseInt(login_employee.getWage());
+		salary.setWage(wage);
+		// 月給 = 時給 * (総労働時間(分) / 60.0(分))
+		long money = (long)(wage * (total_time/60.0) );
+		salary.setSalary(money);
+		// リストに追加
+		salary_list.add(salary);
 		em.close();
 		request.setAttribute("salary_list", salary_list);
 		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/salary/index.jsp");

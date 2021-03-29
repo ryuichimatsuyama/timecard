@@ -42,7 +42,6 @@ public class ApprovalCreateServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		EntityManager em = DBUtil.createEntityManager();
 		// セッションスコープからカードのidを取得して該当のidのカード１件のみをデータベースから取得
-
 		Card c = em.find(Card.class, (Integer) (request.getSession().getAttribute("card_id")));
 		c.setStart(request.getParameter("start_time"));
 		c.setEnd(request.getParameter("end_time"));
@@ -54,7 +53,7 @@ public class ApprovalCreateServlet extends HttpServlet {
 		request.getSession().setAttribute("flush", "承認しました。");
 		request.getSession().removeAttribute("card_id");
 
-		response.sendRedirect(request.getContextPath() + "/index.html");
+        response.sendRedirect(request.getContextPath() + "/approvals/index");
 	}
 
 }

@@ -12,7 +12,7 @@ public class Salary {
 
 	private long total_time;
 
-	private Integer wage;
+	private long wage;
 
 	public Integer getId() {
 		return id;
@@ -54,13 +54,14 @@ public class Salary {
 		this.total_time = total_time;
 	}
 
-	public Integer getWage() {
+	public long getWage() {
 		return wage;
 	}
 
-	public void setWage(Integer wage) {
+	public void setWage(long wage) {
 		this.wage = wage;
 	}
+
 
 
 }

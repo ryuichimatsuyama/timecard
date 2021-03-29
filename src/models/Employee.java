@@ -15,8 +15,8 @@ import javax.persistence.Table;
 @NamedQueries({ @NamedQuery(name = "getAllEmployees", query = "SELECT e FROM Employee AS e ORDER BY e.id DESC"),
 		@NamedQuery(name = "getEmployeesCount", query = "SELECT COUNT(e) FROM Employee AS e"),
 		@NamedQuery(name = "checkRegisteredCode", query = "SELECT COUNT(e) FROM Employee AS e WHERE e.code = :code"),
-		@NamedQuery(name = "checkLoginCodeAndPassword", query = "SELECT e FROM Employee AS e WHERE e.delete_flag = 0 AND e.code = :code AND e.password = :pass"),
-		@NamedQuery(name = "getBossCandidates", query = "SELECT e FROM Employee AS e where not e.id = :id ")
+		@NamedQuery(name = "checkLoginCodeAndPassword", query = "SELECT e FROM Employee AS e WHERE e.delete_flag=0 and  e.code = :code AND e.password = :pass"),
+		@NamedQuery(name = "getBossCandidates", query = "SELECT e FROM Employee AS e where e.delete_flag=0 and not e.id = :id ")
 
 })
 @Entity
@@ -39,14 +39,23 @@ public class Employee {
 	@Column(name = "admin_flag", nullable = false)
 	private Integer admin_flag;
 
+	@Column(name="delete_flag",nullable=false)
+	private Integer delete_flag;
+
+	public Integer getDelete_flag() {
+		return delete_flag;
+	}
+
+	public void setDelete_flag(Integer delete_flag) {
+		this.delete_flag = delete_flag;
+	}
+
 	@Column(name = "created_at", nullable = false)
 	private Timestamp created_at;
 
 	@Column(name = "updated_at", nullable = false)
 	private Timestamp updated_at;
 
-	@Column(name = "delete_flag", nullable = false)
-	private Integer delete_flag;
 
 	@Column(name = "wage", nullable = false)
 	private String wage;
@@ -110,13 +119,6 @@ public class Employee {
 		this.updated_at = updated_at;
 	}
 
-	public Integer getDelete_flag() {
-		return delete_flag;
-	}
-
-	public void setDelete_flag(Integer delete_flag) {
-		this.delete_flag = delete_flag;
-	}
 
 	public String getWage() {
 		return wage;

@@ -16,6 +16,7 @@ import javax.persistence.Table;
 
 @Table(name = "times")
 @NamedQueries({
+		@NamedQuery(name = "getMyApprovedTimes", query = "SELECT r FROM Card AS r where r.status=0 and r.employee =:employee ORDER BY r.id DESC"),
 		@NamedQuery(name = "getMyAllTimes", query = "SELECT r FROM Card AS r where r.employee=:employee ORDER BY r.id DESC"),
 		@NamedQuery(name = "getMyTimesCount", query = "SELECT COUNT(r) FROM Card AS r where r.employee=:employee"),
 		@NamedQuery(name = "getBossCards", query = "SELECT r FROM Card AS r WHERE r.boss = :boss  ORDER BY r.id DESC"),

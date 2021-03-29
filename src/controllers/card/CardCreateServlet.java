@@ -50,8 +50,7 @@ public class CardCreateServlet extends HttpServlet {
 		// 現在時刻を求める
 		LocalDateTime now = LocalDateTime.now();
 		DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm");
-		String start = now.format(format);
-		r.setStart(start);
+		r.setStart(now.format(format));
 		em.getTransaction().begin();
 		em.persist(r);
 		em.getTransaction().commit();

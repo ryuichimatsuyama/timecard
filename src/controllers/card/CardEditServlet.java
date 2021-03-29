@@ -34,7 +34,6 @@ public class CardEditServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		EntityManager em = DBUtil.createEntityManager();
-		// セッションスコープから日報のidを取得して該当のidの日報１件のみをデータベースから取得
 		Card c = em.find(Card.class, Integer.parseInt(request.getParameter("id")));
 
 		em.close();
@@ -42,8 +41,8 @@ public class CardEditServlet extends HttpServlet {
 		request.setAttribute("card", c);
 		request.getSession().setAttribute("card_id", c.getId());
 
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/cards/edit.jsp");
-		rd.forward(request, response);
+        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/cards/edit.jsp");
+        rd.forward(request, response);
 	}
 
 	/**

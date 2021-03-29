@@ -20,33 +20,34 @@ import utils.DBUtil;
 public class EmployeesDestroyServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public EmployeesDestroyServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public EmployeesDestroyServlet() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String _token = (String)request.getParameter("_token");
-        if(_token != null && _token.equals(request.getSession().getId())) {
-            EntityManager em = DBUtil.createEntityManager();
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		String _token = (String) request.getParameter("_token");
+		if (_token != null && _token.equals(request.getSession().getId())) {
+			EntityManager em = DBUtil.createEntityManager();
 
-            Employee e = em.find(Employee.class, (Integer)(request.getSession().getAttribute("employee_id")));
-            e.setDelete_flag(1);
-            e.setUpdated_at(new Timestamp(System.currentTimeMillis()));
+			Employee e = em.find(Employee.class, (Integer) (request.getSession().getAttribute("employee_id")));
+			e.setUpdated_at(new Timestamp(System.currentTimeMillis()));
+			e.setDelete_flag(1);
+			em.getTransaction().begin();
+			em.getTransaction().commit();
+			em.close();
+			request.getSession().setAttribute("flush", "削除が完了しました。");
 
-            em.getTransaction().begin();
-            em.getTransaction().commit();
-            em.close();
-            request.getSession().setAttribute("flush", "削除が完了しました。");
-
-            response.sendRedirect(request.getContextPath() + "/employees/index");
-        }
+			response.sendRedirect(request.getContextPath() + "/employees/index");
+		}
 	}
 
 }

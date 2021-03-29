@@ -14,27 +14,31 @@
                 <h3>【自分の勤怠　一覧】</h3>
         <table id="card_list">
             <tbody>
-                <tr>
-                    <th class="card_name">氏名</th>
+
+                                                <tr>
+                    <th class="card_name">提出先</th>
                     <th class="card_date">日付</th>
                     <th class="card_start">出勤</th>
                     <th class="card_end">退勤</th>
                     <th class="card_break">休憩</th>
                     <th class="card_work_minutes">合計</th>
-<th class="card_wage">日給</th>
+<th class="card_daily_wage">日給</th>
+<th class="card_wage">時給</th>
 <th class="card_status">状態</th>
-
-                    <th class="card_action">操作</th>
+<th class="card_action">操作</th>
                 </tr>
+
                 <c:forEach var="card" items="${cards}" varStatus="status">
                     <tr class="row${status.count % 2}">
-                        <td class="card_name"><c:out value="${card.employee.name}" /></td>
+                        <td class="card_name"><c:out value="${card.boss.name}" /></td>
                         <td class="card_date"><fmt:formatDate value='${card.work_date}' pattern='MM-dd' /></td>
                         <td class="card_start">${card.start}</td>
                         <td class="card_end">${card.end}</td>
                         <td class="card_break">${card.employee.break_time }</td>
                         <td class="card_work_minutes">${card.work_minutes}</td>
-                                                <td class="card_wage"><fmt:formatNumber value='${card.wage}' pattern='###,###円'/></td>
+                                                <td class="card_daily_wage"><fmt:formatNumber value='${card.wage}' pattern='###,###円'/></td>
+                                                <td class="card_wage"><fmt:formatNumber value='${sessionScope.login_employee.wage}' pattern='###,###円'/></td>
+
                         <td class="card_status"><c:choose><c:when test="${card.status==0 }">承認済</c:when>
                         <c:otherwise>未承認</c:otherwise></c:choose></td>
 
@@ -45,8 +49,10 @@
 <c:when test="${empty card.end }">
                         <td class="card_action"><a href="<c:url value='/card/boss?id=${card.id}' />">退勤</a></td>
                         </c:when>
+                        <c:otherwise><td class="card_action">退勤済</c:otherwise>
                         </c:choose>
                     </tr>
+
                 </c:forEach>
             </tbody>
         </table>
