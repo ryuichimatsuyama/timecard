@@ -36,9 +36,8 @@ public class RelationNewServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		EntityManager em = DBUtil.createEntityManager();
 
-		// 自分以外の従業員員一覧を取得する。
 		Employee login_employee = (Employee) request.getSession().getAttribute("login_employee");
-
+		// 自分以外の従業員員一覧を取得する。
 		List<Employee> employees = em.createNamedQuery("getBossCandidates", Employee.class)
 				.setParameter("id", login_employee.getId()).getResultList();
 		em.close();

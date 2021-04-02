@@ -12,10 +12,13 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Table(name = "employees")
+// 全ての従業員
 @NamedQueries({ @NamedQuery(name = "getAllEmployees", query = "SELECT e FROM Employee AS e ORDER BY e.id DESC"),
 		@NamedQuery(name = "getEmployeesCount", query = "SELECT COUNT(e) FROM Employee AS e"),
 		@NamedQuery(name = "checkRegisteredCode", query = "SELECT COUNT(e) FROM Employee AS e WHERE e.code = :code"),
+		@NamedQuery(name = "checkRegisteredBoss", query = "SELECT COUNT(e) FROM Employee AS e WHERE  e.code = :code"),
 		@NamedQuery(name = "checkLoginCodeAndPassword", query = "SELECT e FROM Employee AS e WHERE e.delete_flag=0 and  e.code = :code AND e.password = :pass"),
+		// 自分以外の従業員。削除済を除く
 		@NamedQuery(name = "getBossCandidates", query = "SELECT e FROM Employee AS e where e.delete_flag=0 and not e.id = :id ")
 
 })
@@ -39,7 +42,7 @@ public class Employee {
 	@Column(name = "admin_flag", nullable = false)
 	private Integer admin_flag;
 
-	@Column(name="delete_flag",nullable=false)
+	@Column(name = "delete_flag", nullable = false)
 	private Integer delete_flag;
 
 	public Integer getDelete_flag() {
@@ -55,7 +58,6 @@ public class Employee {
 
 	@Column(name = "updated_at", nullable = false)
 	private Timestamp updated_at;
-
 
 	@Column(name = "wage", nullable = false)
 	private String wage;
@@ -118,7 +120,6 @@ public class Employee {
 	public void setUpdated_at(Timestamp updated_at) {
 		this.updated_at = updated_at;
 	}
-
 
 	public String getWage() {
 		return wage;

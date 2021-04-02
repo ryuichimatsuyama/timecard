@@ -2,10 +2,18 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:import url="/WEB-INF/views/layout/app.jsp">
     <c:param name="content">
-        <c:choose>
-            <c:when test="${card != null}">
                 <h2>上司選択ページ</h2>
-                <form method="POST" action="<c:url value='/card/end' />">
+                <form method="POST" action="<c:url value='/cards/create' />">
+<c:if test="${errors!=null }">
+	<div id="flush_error">
+		入力内容にエラーがあります。<br />
+		<c:forEach var="error" items="${errors }">
+・<c:out value="${error }" />
+			<br />
+		</c:forEach>
+	</div>
+</c:if>
+
 <label for="boss">上司を選択</label>
 <br />
 <select name="boss">
@@ -16,23 +24,18 @@
 <br />
 <br />
 
-<label for="end">退勤時間</label>
+<label for="start">出勤時間</label>
 <br />
-<input type="time" name="end" value="${card.end}" />
+<input type="time" name="start" value="${card.start}" />
 <br />
 <br />
 
 
 <input type="hidden" name="_token" value="${_token}" />
 <c:if test="${!empty relations }">
-<button type="submit">退勤</button>
+<button type="submit">出勤</button>
 </c:if>
                 </form>
-            </c:when>
-            <c:otherwise>
-                <h2>お探しのデータは見つかりませんでした。</h2>
-            </c:otherwise>
-        </c:choose>
 
         <p><a href="<c:url value='/index.html' />">一覧に戻る</a></p>
     </c:param>

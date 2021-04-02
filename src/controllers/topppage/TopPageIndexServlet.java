@@ -80,13 +80,12 @@ public class TopPageIndexServlet extends HttpServlet {
 				String[] split1 = output.split(":");
 				long minutes2 = TimeUnit.HOURS.toMinutes(Integer.parseInt(split1[0])) + Integer.parseInt(split1[1]);
 				long wage = Long.parseLong(login_employee.getWage());
-				card.setWage(wage * minutes2 / 60);
+				card.setWage(wage * minutes2/ 60);
 			}
 		}
 
 		long cards_count = (long) em.createNamedQuery("getMyTimesCount", Long.class)
 				.setParameter("employee", login_employee).getSingleResult();
-
 		em.close();
 		request.setAttribute("cards", cards);
 

@@ -27,31 +27,33 @@ import utils.DBUtil;
 public class ApprovalIndexServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public ApprovalIndexServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public ApprovalIndexServlet() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		EntityManager em = DBUtil.createEntityManager();
-
+		// ログイン従業員取得
 		Employee login_employee = (Employee) request.getSession().getAttribute("login_employee");
 
-
+		// 開くページ数を取得（デフォルトは1ページ目）
 		int page;
 		try {
 			page = Integer.parseInt(request.getParameter("page"));
 		} catch (Exception e) {
 			page = 1;
 		}
-		// 自分宛の日報のみ表示。
+		// 自分宛の日報のみ表示。 最大件数と開始位置を指定して部下のカードを取得
 		List<Card> cards = em.createNamedQuery("getBossCards", Card.class).setParameter("boss", login_employee)
 				.setFirstResult(15 * (page - 1)).setMaxResults(15).getResultList();
 		for (Card card : cards) {
@@ -85,21 +87,22 @@ public class ApprovalIndexServlet extends HttpServlet {
 			}
 		}
 
-
+		// 全件数を取得
 		long cards_count = (long) em.createNamedQuery("getBossCount", Long.class).setParameter("boss", login_employee)
 				.getSingleResult();
 
 		em.close();
 
 		request.setAttribute("cards", cards);
-		request.setAttribute("cards_count", cards_count);
-		request.setAttribute("page", page);
-
+		request.setAttribute("cards_count", cards_count); // 全件数
+		request.setAttribute("page", page);// ページ数
+		// フラッシュメッセージがセッションスコープにセットされていたら
 		if (request.getSession().getAttribute("flush") != null) {
+			// セッションスコープ内のフラッシュメッセージをリクエストスコープに保存し、セッションスコープからは削除する
 			request.setAttribute("flush", request.getSession().getAttribute("flush"));
 			request.getSession().removeAttribute("flush");
 		}
-
+		// 承認待ち一覧を表示
 		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/approvals/index.jsp");
 		rd.forward(request, response);
 	}

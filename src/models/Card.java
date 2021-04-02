@@ -16,9 +16,12 @@ import javax.persistence.Table;
 
 @Table(name = "times")
 @NamedQueries({
+		// 自分の承認されたカード
 		@NamedQuery(name = "getMyApprovedTimes", query = "SELECT r FROM Card AS r where r.status=0 and r.employee =:employee ORDER BY r.id DESC"),
+		// 自分の全てのカード
 		@NamedQuery(name = "getMyAllTimes", query = "SELECT r FROM Card AS r where r.employee=:employee ORDER BY r.id DESC"),
 		@NamedQuery(name = "getMyTimesCount", query = "SELECT COUNT(r) FROM Card AS r where r.employee=:employee"),
+		// 自分宛のカード
 		@NamedQuery(name = "getBossCards", query = "SELECT r FROM Card AS r WHERE r.boss = :boss  ORDER BY r.id DESC"),
 		@NamedQuery(name = "getBossCount", query = "SELECT COUNT(r) FROM Card AS r WHERE r.boss = :boss ")
 

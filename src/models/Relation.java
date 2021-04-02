@@ -13,6 +13,7 @@ import javax.persistence.Table;
 
 @Table(name = "relations")
 @NamedQueries({
+		// 自分の上司一覧。削除済を除く
 		@NamedQuery(name = "getMyBossCount", query = "select count(r)from Relation as r where r.employee=:employee"),
 		@NamedQuery(name = "getMyBoss", query = "select r from Relation as r where r.boss.delete_flag=0 and r.employee=:employee order by r.id desc") })
 @Entity

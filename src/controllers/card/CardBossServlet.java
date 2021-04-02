@@ -23,39 +23,39 @@ import utils.DBUtil;
 public class CardBossServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public CardBossServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public CardBossServlet() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+	 *      response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-        EntityManager em = DBUtil.createEntityManager();
+		EntityManager em = DBUtil.createEntityManager();
+		// ログイン従業員取得
 		Employee login_employee = (Employee) request.getSession().getAttribute("login_employee");
-
+		// 登録した上司一覧を取得
 		List<Relation> relations = em.createNamedQuery("getMyBoss", Relation.class)
-			.setParameter("employee", login_employee).getResultList();
+				.setParameter("employee", login_employee).getResultList();
 
+		Card r = new Card();
+		em.close();
 
-        Card r = em.find(Card.class, Integer.parseInt(request.getParameter("id")));
+			// カード情報とrelationsをセッションIDをリクエストスコープに登録
+			request.setAttribute("relations", relations);
+			request.setAttribute("card", r);
+			request.setAttribute("_token", request.getSession().getId());
 
-        em.close();
-
-        if(r != null && login_employee.getId() == r.getEmployee().getId()) {
-        	request.setAttribute("relations", relations);
-            request.setAttribute("card", r);
-            request.setAttribute("_token", request.getSession().getId());
-            request.getSession().setAttribute("card_id", r.getId());
-        }
-
-        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/cards/end.jsp");
-        rd.forward(request, response);
+		// 提出先選択ページ表示
+		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/cards/end.jsp");
+		rd.forward(request, response);
 	}
 
 }

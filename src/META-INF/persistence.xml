@@ -8,14 +8,15 @@
 		<class>models.Relation</class>
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
-			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost/timecard?useSSL=false&amp;useUnicode=true&amp;characterEncoding=utf8
-"/>
-			<property name="javax.persistence.jdbc.user" value="timeuser"/>
-			<property name="javax.persistence.jdbc.password" value="timepass"/>
-			<property name="javax.persistence.schema-generation.database.action" value="create"/>
+			<property name="javax.persistence.schema-generation.database.action" value="none"/>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
 			<property name="hibernate.show_sql" value="true"/>
 			<property name="hibernate.format_sql" value="true"/>
+			<property name="javax.persistence.jdbc.user" value="bd9452cba9c54a"/>
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://us-cdbr-east-03.cleardb.com/heroku_06c28fd71aff132?reconnect=true&amp;useSSL=false&amp;useUnicode=true&amp;characterEncoding=utf8&amp;characterSetResults=utf8
+
+"/>
+			<property name="javax.persistence.jdbc.password" value="590d164e"/>
 		</properties>
 	</persistence-unit>
 </persistence>

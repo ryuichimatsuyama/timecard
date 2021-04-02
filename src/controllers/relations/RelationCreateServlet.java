@@ -20,36 +20,35 @@ import utils.DBUtil;
 public class RelationCreateServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public RelationCreateServlet() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * @see HttpServlet#HttpServlet()
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		EntityManager em = DBUtil.createEntityManager();
-		// 該当の上司の従業員情報１件のみをデータベースから取得
-		Employee e = em.find(Employee.class, Integer.parseInt(request.getParameter("boss")));
-
-		// relationインスタンスを生成。
-		Relation r = new Relation();
-
-		r.setEmployee((Employee) request.getSession().getAttribute("login_employee"));
-		r.setBoss(e);
-		em.getTransaction().begin();
-		em.persist(r);
-		em.getTransaction().commit();
-
-		em.close();
-		request.getSession().setAttribute("flush", "登録が完了しました。");
-
-
-		response.sendRedirect(request.getContextPath() + "/index.html");
+	public RelationCreateServlet() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 
-}
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+	 *      response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
+		// relationインスタンスを生成。
+		Relation r = new Relation();
+        EntityManager em = DBUtil.createEntityManager();
+
+
+		r.setEmployee((Employee) request.getSession().getAttribute("login_employee"));
+		r.setBoss(em.find(Employee.class, Integer.parseInt(request.getParameter("boss"))));
+
+			em.getTransaction().begin();
+			em.persist(r);
+			em.getTransaction().commit();
+
+			em.close();
+			request.getSession().setAttribute("flush", "登録が完了しました。");
+
+			response.sendRedirect(request.getContextPath() + "/index.html");
+		}
+	}

@@ -23,7 +23,7 @@
                                             <td class="salary_total_time">${salary.year_month}</td>
                                             <td class="salary_days">${salary.days }</td>
                                                 <td class="salary_salary"><fmt:formatNumber value='${salary.salary}' pattern='###,###円'/></td>
-                                                                    <td class="salary_total_time">${salary.total_time }時間</td>
+                                                                    <td class="salary_total_time">${salary.total_time }</td>
                                                 <td class="salary_wage"><fmt:formatNumber value='${sessionScope.login_employee.wage}' pattern='###,###円'/></td>
                     </tr>
                 </c:forEach>

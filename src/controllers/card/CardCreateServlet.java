@@ -2,10 +2,11 @@ package controllers.card;
 
 import java.io.IOException;
 import java.sql.Date;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import models.Card;
 import models.Employee;
+import models.Relation;
 import utils.DBUtil;
 
 /**
@@ -35,38 +37,61 @@ public class CardCreateServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		EntityManager em = DBUtil.createEntityManager();
-
-		Card r = new Card();
-
-		r.setEmployee((Employee) request.getSession().getAttribute("login_employee"));
-		Date work_date = new Date(System.currentTimeMillis());
-		r.setWork_date(work_date);
-		// 投稿すると状態は未承認になる
-		r.setStatus(1);
-		// 現在時刻を求める
-		LocalDateTime now = LocalDateTime.now();
-		DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm");
-		r.setStart(now.format(format));
-		em.getTransaction().begin();
-		em.persist(r);
-		em.getTransaction().commit();
-		em.close();
-		request.getSession().setAttribute("flush", "出勤しました。");
-		response.sendRedirect(request.getContextPath() + "/index.html");
-
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		String _token = (String) request.getParameter("_token");
+		if (_token != null && _token.equals(request.getSession().getId())) {
+			EntityManager em = DBUtil.createEntityManager();
+			// カードのインスタンスを生成
+			Card r = new Card();
+			// ログイン情報をセット
+			r.setEmployee((Employee) request.getSession().getAttribute("login_employee"));
+			// 現在日時をセット
+			Date work_date = new Date(System.currentTimeMillis());
+			r.setWork_date(work_date);
+			// 出勤時間をセット
+			r.setStart(request.getParameter("start"));
+			// 出勤すると状態は未承認になる
+			r.setStatus(1);
+			// 提出先をセット
+			Employee boss=em.find(Employee.class, Integer.parseInt(request.getParameter("boss")));
+			r.setBoss(boss);
+
+		    // 入力項目チェック（バリデーション）
+		    List<String> errors = new ArrayList<String>();
+
+			if (!r.getStart().matches("^([01][0-9]|2[0-3]):[0-5][0-9]$")) {
+		        errors.add("出勤時間を入力してください");
+		    }
+
+			if (errors.size() > 0) {
+				List<Relation> relations = em.createNamedQuery("getMyBoss", Relation.class)
+						.setParameter("employee", (Employee) request.getSession().getAttribute("login_employee"))
+						.getResultList();
+
+				em.close();
+
+				request.setAttribute("relations", relations);
+				request.setAttribute("_token", request.getSession().getId());
+				request.setAttribute("card", r);
+				request.setAttribute("errors", errors);
+
+				RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/cards/end.jsp");
+				rd.forward(request, response);
+			} else {
+
+				// データベースに保存
+				em.getTransaction().begin();
+				em.persist(r);
+				em.getTransaction().commit();
+				em.close();
+				request.getSession().setAttribute("flush", "出勤しました。");
+				// トップページにリダイレクト
+				response.sendRedirect(request.getContextPath() + "/index.html");
+			}
+
+		}
 
 	}
-
 }

@@ -10,7 +10,7 @@ public class Salary {
 
 	private String year_month;
 
-	private long total_time;
+	private String total_time;
 
 	private long wage;
 
@@ -46,11 +46,12 @@ public class Salary {
 		this.year_month = year_month;
 	}
 
-	public long getTotal_time() {
+
+	public String getTotal_time() {
 		return total_time;
 	}
 
-	public void setTotal_time(long total_time) {
+	public void setTotal_time(String total_time) {
 		this.total_time = total_time;
 	}
 
@@ -61,6 +62,9 @@ public class Salary {
 	public void setWage(long wage) {
 		this.wage = wage;
 	}
+
+
+
 
 
 
