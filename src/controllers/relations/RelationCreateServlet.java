@@ -47,12 +47,16 @@ public class RelationCreateServlet extends HttpServlet {
 		Employee boss = em.find(Employee.class, Integer.parseInt(request.getParameter("boss")));
 		r.setBoss(boss);
 		List<String> errors = new ArrayList<String>();
-		// もし従業員以外が登録されたならば
+		// もし自分を除く従業員以外が登録されたならば
 		if (!em.createNamedQuery("getBossCandidates", Employee.class).setParameter("id", e.getId()).getResultList()
 				.contains(boss)) {
 			errors.add("上司が間違ってます");
 		}
 		if (errors.size() > 0) {
+			List<Employee> employees = em.createNamedQuery("getBossCandidates", Employee.class)
+					.setParameter("id", e.getId()).getResultList();
+			em.close();
+			request.setAttribute("employees", employees);
 
 			request.setAttribute("_token", request.getSession().getId());
 			request.setAttribute("card", r);
