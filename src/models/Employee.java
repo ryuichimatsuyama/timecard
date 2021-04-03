@@ -19,7 +19,8 @@ import javax.persistence.Table;
 		@NamedQuery(name = "checkRegisteredBoss", query = "SELECT COUNT(e) FROM Employee AS e WHERE  e.code = :code"),
 		@NamedQuery(name = "checkLoginCodeAndPassword", query = "SELECT e FROM Employee AS e WHERE e.delete_flag=0 and  e.code = :code AND e.password = :pass"),
 		// 自分以外の従業員。削除済を除く
-		@NamedQuery(name = "getBossCandidates", query = "SELECT e FROM Employee AS e where e.delete_flag=0 and not e.id = :id ")
+		@NamedQuery(name = "getBossCandidates", query = "SELECT e FROM Employee AS e where e.delete_flag=0 and not e.id = :id "),
+
 
 })
 @Entity

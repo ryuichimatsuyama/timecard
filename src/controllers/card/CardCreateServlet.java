@@ -57,7 +57,6 @@ public class CardCreateServlet extends HttpServlet {
 			// 提出先をセット
 			Employee boss=em.find(Employee.class, Integer.parseInt(request.getParameter("boss")));
 			r.setBoss(boss);
-
 		    // 入力項目チェック（バリデーション）
 		    List<String> errors = new ArrayList<String>();
 
