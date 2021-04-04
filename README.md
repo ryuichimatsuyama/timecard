@@ -24,18 +24,36 @@ timecardは以下の機能を実装しています。
 「月給」、「日数」、「労働時間」が表示されます。
 承認されたタイムカードしか反映されません。
 
+
 # 設計図
 
 サイトマップ
 
-！[サイトマップ]
-(https://gyazo.com/4968fec62f4a405dee022fc6a1b248ac)
+![サイトマップ](https://gyazo.com/b9960d8ce0202943544d60852bfde413/raw)
+
+
+データベース図
+![データベース図](https://gyazo.com/04547ee6a5847f4486cf17ffa0b5b92a/raw)
+
 
 
 # 使用方法
-動画をご確認ください。」
-
+動画をご確認ください。
 
 ## Heroku URL
 https://servlet-timecard.herokuapp.com/
+
+## 動画
+- 打刻機能
+
+![打刻機能](https://gyazo.com/e87abd3755a15ae889266ad9d7cc4800/raw)
+
+
+- ログイン/承認機能/ログアウト
+
+![ログイン・承認機能・ログアウト](https://gyazo.com/30884fb0003cca6782fa275fa62ee5ca/raw)
+
+# 著者
+Ryuichi Matsuyama
+
 
