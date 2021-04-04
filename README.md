@@ -39,6 +39,7 @@ timecardは以下の機能を実装しています。
 
 # 使用方法
 動画をご確認ください。
+パスワードと番号は222です。
 
 ## Heroku URL
 https://servlet-timecard.herokuapp.com/
