@@ -23,3 +23,19 @@ timecardは以下の機能を実装しています。
 - 月給表示機能:
 「月給」、「日数」、「労働時間」が表示されます。
 承認されたタイムカードしか反映されません。
+
+# 設計図
+
+サイトマップ
+
+！[サイトマップ]
+(https://gyazo.com/4968fec62f4a405dee022fc6a1b248ac)
+
+
+# 使用方法
+動画をご確認ください。」
+
+
+## Heroku URL
+https://servlet-timecard.herokuapp.com/
+
