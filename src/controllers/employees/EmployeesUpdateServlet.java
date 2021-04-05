@@ -39,7 +39,8 @@ public class EmployeesUpdateServlet extends HttpServlet {
         String _token = (String)request.getParameter("_token");
         if(_token != null && _token.equals(request.getSession().getId())) {
             EntityManager em = DBUtil.createEntityManager();
-
+            // セッションスコープから従業員のIDを取得して
+            // 該当のIDの従業員1件のみをデータベースから取得
             Employee e = em.find(Employee.class, (Integer)(request.getSession().getAttribute("employee_id")));
 
             // 現在の値と異なる社員番号が入力されていたら
@@ -65,10 +66,10 @@ public class EmployeesUpdateServlet extends HttpServlet {
                                 )
                         );
             }
-
+            // フォームの内容を各フィールドに上書き
             e.setName(request.getParameter("name"));
             e.setAdmin_flag(Integer.parseInt(request.getParameter("admin_flag")));
-            e.setUpdated_at(new Timestamp(System.currentTimeMillis()));
+            e.setUpdated_at(new Timestamp(System.currentTimeMillis()));// 更新日時のみ上書き
             e.setDelete_flag(0);
             e.setBreak_time(request.getParameter("break_time"));
             e.setWage(request.getParameter("wage"));
@@ -84,13 +85,14 @@ public class EmployeesUpdateServlet extends HttpServlet {
                 RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/employees/edit.jsp");
                 rd.forward(request, response);
             } else {
+                // データベースを更新
                 em.getTransaction().begin();
                 em.getTransaction().commit();
                 em.close();
                 request.getSession().setAttribute("flush", "更新が完了しました。");
-
+                // セッションスコープ上の不要になったデータを削除
                 request.getSession().removeAttribute("employee_id");
-
+                // indexページへリダイレクト
                 response.sendRedirect(request.getContextPath() + "/employees/index");
             }
         }

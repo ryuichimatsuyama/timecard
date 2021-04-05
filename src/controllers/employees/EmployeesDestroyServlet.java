@@ -37,15 +37,16 @@ public class EmployeesDestroyServlet extends HttpServlet {
 		String _token = (String) request.getParameter("_token");
 		if (_token != null && _token.equals(request.getSession().getId())) {
 			EntityManager em = DBUtil.createEntityManager();
-
+            // セッションスコープから従業員のIDを取得して
+            // 該当のIDの従業員1件のみをデータベースから取得
 			Employee e = em.find(Employee.class, (Integer) (request.getSession().getAttribute("employee_id")));
 			e.setUpdated_at(new Timestamp(System.currentTimeMillis()));
-			e.setDelete_flag(1);
+			e.setDelete_flag(1);// データ削除
 			em.getTransaction().begin();
 			em.getTransaction().commit();
 			em.close();
 			request.getSession().setAttribute("flush", "削除が完了しました。");
-
+            // indexページへリダイレクト
 			response.sendRedirect(request.getContextPath() + "/employees/index");
 		}
 	}

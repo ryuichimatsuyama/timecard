@@ -38,6 +38,7 @@ public class RelationIndexServlet extends HttpServlet {
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		EntityManager em = DBUtil.createEntityManager();
+		// 自分の従業員情報
 		Employee login_employee = (Employee) request.getSession().getAttribute("login_employee");
 		int page = 1;
 		try {

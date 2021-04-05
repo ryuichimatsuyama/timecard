@@ -1,6 +1,7 @@
 package controllers.approvals;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -54,6 +55,7 @@ public class ApprovalCreateServlet extends HttpServlet {
 		c.setStart(request.getParameter("start_time"));
 		// 退勤時間を更新
 		c.setEnd(request.getParameter("end_time"));
+		c.setWork_date(Date.valueOf(request.getParameter("work_date")));
 		// 状態を承認に更新する
 		c.setStatus(0);
         List<String> errors = CardValidator.validate(c);

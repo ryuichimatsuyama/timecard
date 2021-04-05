@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <c:import url="/WEB-INF/views/layout/app.jsp">
 	<c:param name="content">
 		<h2>承認と編集ページ</h2>
@@ -15,6 +17,10 @@
 		</c:forEach>
 	</div>
 </c:if>
+<label for="work_date">日付</label><br />
+<input type="date" name="work_date" value="<fmt:formatDate value='${card.work_date}' pattern='yyyy-MM-dd' />" />
+<br /><br />
+
 <label for="start_time">出勤時間</label>
 <br />
 <input type="time" name="start_time" value="${card.start}" />

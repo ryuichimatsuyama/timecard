@@ -31,7 +31,9 @@ public class EmployeesNewServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+        // CSRF対策
         request.setAttribute("_token", request.getSession().getId());
+        // おまじないとしてのインスタンスを生成
         request.setAttribute("employee", new Employee());
 
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/employees/new.jsp");
