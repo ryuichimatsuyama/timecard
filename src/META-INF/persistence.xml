@@ -6,6 +6,7 @@
 		<class>models.Employee</class>
 		<class>models.Card</class>
 		<class>models.Relation</class>
+		<class>models.Message</class>
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost/timecard?useSSL=false&amp;useUnicode=true&amp;characterEncoding=utf8
