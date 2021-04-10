@@ -17,13 +17,10 @@
 <label for="message">メッセージ</label><br />
 <textarea name="message" rows="10" cols="50">${board.message}</textarea>
 <br /><br />
+<label for="image">写真</label><br />
 
-<label for="file">画像</label><br />
-<input type="file" name="file" value="${board.file}"/>
-<br />
-<canvas id="canvas" width="0" height="0"></canvas>
-<br />
-
+    <input type="file" name="file" />
+<br/><br/>
 
 
 

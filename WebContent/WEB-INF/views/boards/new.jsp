@@ -4,7 +4,7 @@
     <c:param name="content">
         <h2>掲示板　新規登録ページ</h2>
 
-        <form method="POST" action="<c:url value='/boards/create' />">
+        <form method="POST" action="<c:url value='/boards/create'/>" enctype="multipart/form-data">
             <c:import url="_form.jsp" />
         </form>
 
