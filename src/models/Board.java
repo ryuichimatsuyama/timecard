@@ -7,16 +7,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-@Table(name = "messages")
-		@NamedQuery(name = "getOurMessages", query = "select e from Message as e where (e.send=:send and e.get = :get) or (e.send=:get and e.get=:send) ORDER BY e.created_at DESC")
+@Table(name = "boards")
+@NamedQuery(name = "getAllMessages", query = "select e from Board as e ORDER BY e.created_at DESC")
 @Entity
-public class Message {
+public class Board {
 	public Integer getId() {
 		return id;
 	}
@@ -25,34 +23,22 @@ public class Message {
 		this.id = id;
 	}
 
-	public Employee getSend() {
-		return send;
-	}
-
-	public void setSend(Employee send) {
-		this.send = send;
-	}
-
-	public Employee getGet() {
-		return get;
-	}
-
-	public void setGet(Employee get) {
-		this.get = get;
-	}
-
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@ManyToOne
-	@JoinColumn(name = "send_id", nullable = false)
-	private Employee send;
+	@Column(name = "file")
+	private String file;
 
-	@ManyToOne
-	@JoinColumn(name = "get_id", nullable = false)
-	private Employee get;
+	public String getFile() {
+		return file;
+	}
+
+	public void setFile(String file) {
+		this.file = file;
+	}
+
 	@Lob
 	@Column(name = "message", nullable = false)
 	private String message;

@@ -4,11 +4,15 @@
 
 <c:import url="../layout/app.jsp">
     <c:param name="content">
-        <c:if test="${flush != null}">
-            <div id="flush_success">
-                <c:out value="${flush}"></c:out>
-            </div>
-        </c:if>
+<c:if test="${errors != null}">
+    <div id="flush_error">
+        入力内容にエラーがあります。<br />
+        <c:forEach var="error" items="${errors}">
+            ・<c:out value="${error}" /><br />
+        </c:forEach>
+
+    </div>
+</c:if>
 
                                 <h2>                         <c:out value="${name.name}" />
                                  </h2>

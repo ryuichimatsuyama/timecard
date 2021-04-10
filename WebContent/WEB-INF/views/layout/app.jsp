@@ -20,8 +20,8 @@
                             <a href="<c:url value='/salary/index' />">月給</a>&nbsp;
                                                         <a href="<c:url value='/relations/index' />">上司一覧</a>&nbsp;
 						<a href="<c:url value='/approvals/index' />">承認待ち</a>&nbsp;
-						<a href="<c:url value='/messages/index' />">従業員一覧</a>&nbsp;
-
+						<a href="<c:url value='/messages/index' />">DM</a>&nbsp;
+						<a href="<c:url value='/boards/index' />">掲示板</a>&nbsp;
 
                             </c:if>
 
