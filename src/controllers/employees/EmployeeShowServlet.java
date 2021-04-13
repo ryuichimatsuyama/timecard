@@ -18,7 +18,7 @@ import utils.DBUtil;
  */
 @WebServlet("/employees/show")
 public class EmployeeShowServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * @see HttpServlet#HttpServlet()
@@ -28,22 +28,22 @@ public class EmployeeShowServlet extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+    /**
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+     */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // DAOインスタンスの生成
         EntityManager em = DBUtil.createEntityManager();
         // 該当のIDの従業員1件のみをデータベースから取得
 
         Employee e = em.find(Employee.class, Integer.parseInt(request.getParameter("id")));
-
+        // DAOの破棄
         em.close();
         // 従業員データをリクエストスコープにセットしてshow.jspを呼び出す
         request.setAttribute("employee", e);
-
+        // 画面遷移
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/employees/show.jsp");
         rd.forward(request, response);
-	}
+    }
 
 }

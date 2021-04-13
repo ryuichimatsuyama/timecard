@@ -13,45 +13,45 @@ import javax.persistence.Table;
 
 @Table(name = "relations")
 @NamedQueries({
-		// 自分の上司一覧。削除済を除く
-		@NamedQuery(name = "getMyBossCount", query = "select count(r)from Relation as r where r.employee=:employee"),
-		@NamedQuery(name = "getMyBoss", query = "select r from Relation as r where r.boss.delete_flag=0 and r.employee=:employee order by r.id desc") })
+        // 自分の上司一覧。削除済を除く
+        @NamedQuery(name = "getMyBossCount", query = "select count(r)from Relation as r where r.employee=:employee"),
+        @NamedQuery(name = "getMyBoss", query = "select r from Relation as r where r.boss.delete_flag=0 and r.employee=:employee order by r.id desc") })
 @Entity
 public class Relation {
-	@Id
-	@Column(name = "id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+    //登録者
+    @ManyToOne
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
+    //自分が登録した上司
+    @ManyToOne
+    @JoinColumn(name = "boss_id")
+    private Employee boss;
 
-	@ManyToOne
-	@JoinColumn(name = "employee_id")
-	private Employee employee;
+    public Integer getId() {
+        return id;
+    }
 
-	@ManyToOne
-	@JoinColumn(name = "boss_id")
-	private Employee boss;
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
-	public Integer getId() {
-		return id;
-	}
+    public Employee getEmployee() {
+        return employee;
+    }
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
 
-	public Employee getEmployee() {
-		return employee;
-	}
+    public Employee getBoss() {
+        return boss;
+    }
 
-	public void setEmployee(Employee employee) {
-		this.employee = employee;
-	}
-
-	public Employee getBoss() {
-		return boss;
-	}
-
-	public void setBoss(Employee boss) {
-		this.boss = boss;
-	}
+    public void setBoss(Employee boss) {
+        this.boss = boss;
+    }
 }

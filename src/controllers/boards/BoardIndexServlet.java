@@ -19,7 +19,7 @@ import utils.DBUtil;
  */
 @WebServlet("/boards/index")
 public class BoardIndexServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * @see HttpServlet#HttpServlet()
@@ -29,20 +29,22 @@ public class BoardIndexServlet extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		EntityManager em = DBUtil.createEntityManager();
-		// 該当のIDの従業員1件のみをデータベースから取得
-		List<Board> boards = em.createNamedQuery("getAllMessages", Board.class)
-				.getResultList();
-		em.close(); // メッセージデータをリクエストスコープにセットしてshow.jspを呼び出す
-		request.setAttribute("boards", boards);
-
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/boards/index.jsp");
-		rd.forward(request, response);
-	}
+    /**
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+     */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // DAOインスタンスの生成
+        EntityManager em = DBUtil.createEntityManager();
+        // 該当のIDの従業員1件のみをデータベースから取得
+        List<Board> boards = em.createNamedQuery("getAllMessages", Board.class)
+                .getResultList();
+        // DAOの破棄
+        em.close();
+        // メッセージデータをリクエストスコープにセットしてindex.jspを呼び出す
+        request.setAttribute("boards", boards);
+        // 画面遷移
+        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/boards/index.jsp");
+        rd.forward(request, response);
+    }
 
 }

@@ -20,37 +20,41 @@ import utils.DBUtil;
  */
 @WebServlet("/messages/show")
 public class MessageShowServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public MessageShowServlet() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public MessageShowServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		EntityManager em = DBUtil.createEntityManager();
-		// 該当のIDの従業員1件のみをデータベースから取得
-		Employee login_employee = (Employee) request.getSession().getAttribute("login_employee");
-		Employee e = em.find(Employee.class, Integer.parseInt(request.getParameter("id")));
-		List<Message> messages = em.createNamedQuery("getOurMessages", Message.class).setParameter("send", e)
-				.setParameter("get", login_employee).setParameter("send", login_employee).setParameter("get", e)
-				.getResultList();
-		em.close(); // メッセージデータをリクエストスコープにセットしてshow.jspを呼び出す
-		request.setAttribute("messages", messages);
-		request.setAttribute("name", e);
-		request.getSession().setAttribute("employee_id",e.getId());
-
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/messages/show.jsp");
-		rd.forward(request, response);
-	}
+    /**
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+     *      response)
+     */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // DAOインスタンスの生成
+        EntityManager em = DBUtil.createEntityManager();
+        //		ログイン情報
+        Employee login_employee = (Employee) request.getSession().getAttribute("login_employee");
+        // 該当のIDの従業員1件のみをデータベースから取得
+        Employee e = em.find(Employee.class, Integer.parseInt(request.getParameter("id")));
+        //		相手と自分のみのメッセージのみ
+        List<Message> messages = em.createNamedQuery("getOurMessages", Message.class).setParameter("send", e)
+                .setParameter("get", login_employee).setParameter("send", login_employee).setParameter("get", e)
+                .getResultList();
+        // DAOの破棄
+        em.close();
+        // リクエストスコープに各データをセット
+        request.setAttribute("messages", messages);
+        request.setAttribute("name", e);
+        request.getSession().setAttribute("employee_id", e.getId());
+        // 画面遷移
+        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/messages/show.jsp");
+        rd.forward(request, response);
+    }
 
 }

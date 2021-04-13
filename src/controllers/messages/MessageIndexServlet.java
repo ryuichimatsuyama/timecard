@@ -19,38 +19,43 @@ import utils.DBUtil;
  */
 @WebServlet("/messages/index")
 public class MessageIndexServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public MessageIndexServlet() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public MessageIndexServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		EntityManager em = DBUtil.createEntityManager();
-		Employee login_employee = (Employee) request.getSession().getAttribute("login_employee");
-		List<Employee> messages = em.createNamedQuery("getBossCandidates", Employee.class)
-				.setParameter("id", login_employee.getId()).getResultList();
-
-		em.close();
-
-		request.setAttribute("messages", messages);
-		if (request.getSession().getAttribute("flush") != null) {
-			request.setAttribute("flush", request.getSession().getAttribute("flush"));
-			request.getSession().removeAttribute("flush");
-		}
-
-		RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/messages/index.jsp");
-		rd.forward(request, response);
-	}
+    /**
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+     *      response)
+     */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // DAOインスタンスの生成
+        EntityManager em = DBUtil.createEntityManager();
+        //		ログイン情報を
+        Employee login_employee = (Employee) request.getSession().getAttribute("login_employee");
+        //		自分以外の従業員
+        List<Employee> messages = em.createNamedQuery("getBossCandidates", Employee.class)
+                .setParameter("id", login_employee.getId()).getResultList();
+        // DAOの破棄
+        em.close();
+        //メッセージをセット
+        request.setAttribute("messages", messages);
+        // セッションスコープにフラッシュメッセージが残っているならば
+        if (request.getSession().getAttribute("flush") != null) {
+            // セッションスコープにフラッシュメッセージとしてリクエストスコープにセット
+            request.setAttribute("flush", request.getSession().getAttribute("flush"));
+            // リクエストスコープにセットされたフラッシュメッセージを削除する
+            request.getSession().removeAttribute("flush");
+        }
+        // 画面遷移
+        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/messages/index.jsp");
+        rd.forward(request, response);
+    }
 
 }

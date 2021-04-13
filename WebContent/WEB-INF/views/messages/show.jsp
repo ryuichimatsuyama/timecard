@@ -17,7 +17,7 @@
                                 <h2>                         <c:out value="${name.name}" />
                                  </h2>
 
-        		<form method="POST" action="<c:url value='/messages/create'/>">
+            <form method="POST" action="<c:url value='/messages/create'/>">
 <textarea name="message" rows="10" cols="50">${message.message}</textarea>
 
 <br />

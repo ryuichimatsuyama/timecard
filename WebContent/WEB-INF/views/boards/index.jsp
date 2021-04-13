@@ -17,10 +17,12 @@
                         <c:forEach var="board" items="${boards}" varStatus="status">
                         <div style="padding: 10px; margin-bottom: 10px; border: 1px solid #333333;">
 
-                      <p> <b> <c:out value="${sessionScope.login_employee.name}" /></b></p>
+                      <p> <b> <c:out value="${board.employee.name}" /></b></p>
                         <fmt:formatDate value="${board.created_at}" pattern="yyyy-MM-dd HH:mm"/>
                         <p><c:out value="${board.message}" /></p>
+                        <c:if test="${!empty board.file }">
                                                 <p><img src="<c:url value="/images/${board.file}"/>"></p>
+                                                </c:if>
                         </div>
                         </c:forEach>
 

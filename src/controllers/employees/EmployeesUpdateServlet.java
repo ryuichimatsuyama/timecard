@@ -22,7 +22,7 @@ import validators.EmployeeValidator;
  */
 @WebServlet("/employees/update")
 public class EmployeesUpdateServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
     /**
      * @see HttpServlet#HttpServlet()
@@ -32,12 +32,15 @@ public class EmployeesUpdateServlet extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    /**
+     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+     */
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // String型の _tokenにパラメーターの_tokenを代入する
         String _token = (String)request.getParameter("_token");
+        // _tokenがnullではなく、且つセッションIDと等しいならば
         if(_token != null && _token.equals(request.getSession().getId())) {
+            // DAOインスタンスの生成
             EntityManager em = DBUtil.createEntityManager();
             // セッションスコープから従業員のIDを取得して
             // 該当のIDの従業員1件のみをデータベースから取得
@@ -73,22 +76,26 @@ public class EmployeesUpdateServlet extends HttpServlet {
             e.setDelete_flag(0);
             e.setBreak_time(request.getParameter("break_time"));
             e.setWage(request.getParameter("wage"));
-
+            // バリデーター の呼び出し
             List<String> errors = EmployeeValidator.validate(e, codeDuplicateCheckFlag, passwordCheckFlag);
+            // errorsリストに1つでも追加されていたら
             if(errors.size() > 0) {
+                // DAOの破棄
                 em.close();
-
+                // リクエストスコープに各データをセット
                 request.setAttribute("_token", request.getSession().getId());
                 request.setAttribute("employee", e);
                 request.setAttribute("errors", errors);
-
+                // 画面遷移
                 RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/employees/edit.jsp");
                 rd.forward(request, response);
             } else {
                 // データベースを更新
                 em.getTransaction().begin();
                 em.getTransaction().commit();
+                // DAOの破棄
                 em.close();
+                // セッションスコープにフラッシュメッセージをセットする
                 request.getSession().setAttribute("flush", "更新が完了しました。");
                 // セッションスコープ上の不要になったデータを削除
                 request.getSession().removeAttribute("employee_id");
@@ -96,6 +103,6 @@ public class EmployeesUpdateServlet extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/employees/index");
             }
         }
-	}
+    }
 
 }

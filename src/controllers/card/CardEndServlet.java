@@ -19,38 +19,40 @@ import utils.DBUtil;
  */
 @WebServlet("/card/end")
 public class CardEndServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public CardEndServlet() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public CardEndServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		EntityManager em = DBUtil.createEntityManager();
-		// 該当のIDのカード1件のみをデータベースから取得
-		Card c = em.find(Card.class, Integer.parseInt(request.getParameter("id")));
-
-		// 現在時刻を求める
-		LocalDateTime now = LocalDateTime.now();
-		DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm");
-		c.setEnd(now.format(format));
-		// データベースを更新
-		em.getTransaction().begin();
-		em.getTransaction().commit();
-		em.close();
-		request.getSession().setAttribute("flush", "退勤しました。");
-		// トップページにリダイレクト
-		response.sendRedirect(request.getContextPath() + "/index.html");
-		}
-	}
+    /**
+     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+     *      response)
+     */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // DAOインスタンスの生成
+        EntityManager em = DBUtil.createEntityManager();
+        // 該当のIDのカード1件のみをデータベースから取得
+        Card c = em.find(Card.class, Integer.parseInt(request.getParameter("id")));
+        // 現在時刻を求める
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm");
+        c.setEnd(now.format(format));
+        // データベースを更新
+        em.getTransaction().begin();
+        em.getTransaction().commit();
+        // DAOの破棄
+        em.close();
+        // セッションスコープにフラッシュメッセージをセットする
+        request.getSession().setAttribute("flush", "退勤しました。");
+        // トップページにリダイレクト
+        response.sendRedirect(request.getContextPath() + "/index.html");
+        }
+    }
 
 

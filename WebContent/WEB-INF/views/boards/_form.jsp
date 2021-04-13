@@ -18,9 +18,9 @@
 <textarea name="message" rows="10" cols="50">${board.message}</textarea>
 <br /><br />
 <label for="image">写真</label><br />
-
-    <input type="file" name="file" />
-<br/><br/>
+    <input type="file" name="file" value="${board.file }" />
+    <br/>
+<br/>
 
 
 

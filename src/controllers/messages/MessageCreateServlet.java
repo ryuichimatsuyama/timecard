@@ -22,67 +22,77 @@ import utils.DBUtil;
  */
 @WebServlet("/messages/create")
 public class MessageCreateServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public MessageCreateServlet() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public MessageCreateServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		EntityManager em = DBUtil.createEntityManager();
-		Employee login_employee = (Employee) request.getSession().getAttribute("login_employee");
-		Employee e = em.find(Employee.class, (Integer) (request.getSession().getAttribute("employee_id")));
-		// メッセージのインスタンスを生成
-		Message m = new Message();
-		// mの各フィールドにデータを代入
-		m.setGet(e);
-		m.setSend(login_employee);
-		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-		m.setCreated_at(currentTime);
-		String message = request.getParameter("message");
-		m.setMessage(message);
-		List<String> errors = new ArrayList<String>();
-		// もし自分を除く従業員以外が登録されたならば
-		if (message == null || message.equals("")) {
-			errors.add("メッセージを入力してください");
-		}
-		if (errors.size() > 0) {
-			List<Message> messages = em.createNamedQuery("getOurMessages", Message.class).setParameter("send", e)
-					.setParameter("get", login_employee).setParameter("send", login_employee).setParameter("get", e)
-					.getResultList();
-			em.close(); // メッセージデータをリクエストスコープにセットしてshow.jspを呼び出す
-			request.setAttribute("messages", messages);
-			request.setAttribute("name", e);
+    /**
+     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+     *      response)
+     */
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // DAOインスタンスの生成
+        EntityManager em = DBUtil.createEntityManager();
+        // ログイン情報
+        Employee login_employee = (Employee) request.getSession().getAttribute("login_employee");
+        // セッションスコープから従業員のIDを取得して
+        // 該当のIDの従業員1件のみをデータベースから取得
+        Employee e = em.find(Employee.class, (Integer) (request.getSession().getAttribute("employee_id")));
+        // メッセージのインスタンスを生成
+        Message m = new Message();
+        // mの各フィールドにデータを代入
+        m.setGet(e);
+        m.setSend(login_employee);
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+        m.setCreated_at(currentTime);
+        String message = request.getParameter("message");
+        m.setMessage(message);
+        // バリデーター の呼び出し
+        List<String> errors = new ArrayList<String>();
+//        空欄なら
+        if (message == null || message.equals("")) {
+            errors.add("メッセージを入力してください");
+        }
+        // errorsリストに1つでも追加されていたら
+        if (errors.size() > 0) {
+            //      相手と自分のみのメッセージのみ
+            List<Message> messages = em.createNamedQuery("getOurMessages", Message.class).setParameter("send", e)
+                    .setParameter("get", login_employee).setParameter("send", login_employee).setParameter("get", e)
+                    .getResultList();
+            // DAOの破棄
+            em.close();
+            // リクエストスコープに各データをセット
+            request.setAttribute("messages", messages);
+            request.setAttribute("name", e);
+            request.setAttribute("errors", errors);
+            // 前の画面に戻る
+            RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/messages/show.jsp");
+            rd.forward(request, response);
+        } else {
+            // データベースに保存
+            em.getTransaction().begin();
+            em.persist(m);
+            em.getTransaction().commit();
+            //      相手と自分のみのメッセージのみ
+            List<Message> messages = em.createNamedQuery("getOurMessages", Message.class).setParameter("send", e)
+                    .setParameter("get", login_employee).setParameter("send", login_employee).setParameter("get", e)
+                    .getResultList();
+            // DAOの破棄
+            em.close();
+            // リクエストスコープに各データをセット
+            request.setAttribute("messages", messages);
+            request.setAttribute("name", e);
 
-			request.setAttribute("errors", errors);
-			// 前の画面に戻る
-			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/messages/show.jsp");
-			rd.forward(request, response);
-		} else { // データベースに保存
-			em.getTransaction().begin();
-			em.persist(m);
-			em.getTransaction().commit();
-			request.getSession().setAttribute("flush", "送信が完了しました。");
-			request.getSession().removeAttribute("employee_id");
-			List<Message> messages = em.createNamedQuery("getOurMessages", Message.class).setParameter("send", e)
-					.setParameter("get", login_employee).setParameter("send", login_employee).setParameter("get", e)
-					.getResultList();
-			em.close(); // メッセージデータをリクエストスコープにセットしてshow.jspを呼び出す
-			request.setAttribute("messages", messages);
-			request.setAttribute("name", e);
-
-			// メッセージページにリダイレクト
-			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/messages/show.jsp");
-			rd.forward(request, response);
-		}
-	}
+            // メッセージページにリダイレクト
+            RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/messages/show.jsp");
+            rd.forward(request, response);
+        }
+    }
 }
