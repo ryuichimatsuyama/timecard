@@ -16,6 +16,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+
 import models.Board;
 import models.Employee;
 import utils.DBUtil;
@@ -26,77 +32,118 @@ import utils.DBUtil;
 @MultipartConfig
 @WebServlet("/boards/create")
 public class BoardCreateServlet extends HttpServlet {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public BoardCreateServlet() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public BoardCreateServlet() {
+        super();
+        // TODO Auto-generated constructor stub
+    }
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		EntityManager em = DBUtil.createEntityManager();
+    /**
+     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+     *      response)
+     */
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // DAOインスタンスの生成
+        EntityManager em = DBUtil.createEntityManager();
+        //boardインスタンス生成
+        Board b = new Board();
+        //メッセージをセット
+        String message = request.getParameter("message");
+        b.setMessage(message);
 
-		Board b = new Board();
+        // partという変数を作る
+        Part part = request.getPart("file");
+        if (part.getSize() != 0) {
+            // part(主にjsp)から送られてきたファイル名を取得
+            String filename = this.getFileName(part);
+            b.setFile(filename);
+            String filePath = getServletContext().getRealPath("/images/") + filename;
+            File uploadDir = new File(getServletContext().getRealPath("/images/"));
+            if (!uploadDir.exists()) {
+                uploadDir.mkdir();
+            }
+            part.write(filePath);
+            /* S3 */
+            String region = (String) this.getServletContext().getAttribute("region");
+            String awsAccessKey = (String) this.getServletContext().getAttribute("awsAccessKey");
+            String awsSecretKey = (String) this.getServletContext().getAttribute("awsSecretKey");
+            String bucketName = (String) this.getServletContext().getAttribute("bucketName");
+            // 認証情報を用意
+            AWSCredentials credentials = new BasicAWSCredentials(
+                    // アクセスキー
+                    awsAccessKey,
+                    // シークレットキー
+                    awsSecretKey);
+            // クライアントを生成
+            AmazonS3 s3 = AmazonS3ClientBuilder.standard()
+                    // 認証情報を設定
+                    .withCredentials(new AWSStaticCredentialsProvider(credentials))
+                    // リージョンを AP_NORTHEAST_1(東京) に設定
+                    .withRegion(region).build();
+            // === ファイルから直接アップロードする場合 ===
+            // アップロードするファイル
+            File file = new File(filePath);
+            // ファイルをアップロード
+            s3.putObject(
+                    // アップロード先バケット名
+                    bucketName,
+                    // アップロード後のキー名
+                    "images/" + filename,
+                    // ファイルの実体
+                    file);
+        }
+        //        作成日時セット
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+        b.setCreated_at(currentTime);
+        //        作成者セット
+        b.setEmployee((Employee) request.getSession().getAttribute("login_employee"));
+        // バリデーター の呼び出し
+        List<String> errors = new ArrayList<String>();
+        //        空欄ならば
+        if (message == null || message.equals("")) {
+            errors.add("メッセージを入力してください");
+        }
+        // errorsリストに1つでも追加されていたら
+        if (errors.size() > 0) {
+            // DAOの破棄
+            em.close();
+            // リクエストスコープにerrorsをセット
+            request.setAttribute("errors", errors);
+            // 前の画面に戻る
+            RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/boards/new.jsp");
+            rd.forward(request, response);
+        } else {
+            // データベースに保存
 
-		String message = request.getParameter("message");
-		b.setMessage(message);
+            em.getTransaction().begin();
+            em.persist(b);
+            em.getTransaction().commit();
+            // DAOの破棄
+            em.close();
+            //            boardをセット
+            request.setAttribute("board", b);
+            // セッションスコープにフラッシュメッセージをセットする
+            request.getSession().setAttribute("flush", "送信が完了しました。");
+            // 画面遷移
+            response.sendRedirect(request.getContextPath() + "/boards/index");
+        }
+    }
 
-		// partという変数を作る
-		Part part = request.getPart("file");
-		if (part.getSize() != 0) {
-			// part(主にjsp)から送られてきたファイル名を取得
-			String filename = this.getFileName(part);
-			b.setFile(filename);
-			String filePath = getServletContext().getRealPath("/images/") + filename;
-			File uploadDir = new File(getServletContext().getRealPath("/images/"));
-			if (!uploadDir.exists()) {
-				uploadDir.mkdir();
-			}
-			part.write(filePath);
-		}
-		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-		b.setCreated_at(currentTime);
-		b.setEmployee((Employee)request.getSession().getAttribute("login_employee"));
-		List<String> errors = new ArrayList<String>();
-		if (message == null || message.equals("")) {
-			errors.add("メッセージを入力してください");
-		}
-		if (errors.size() > 0) {
-
-			request.setAttribute("errors", errors);
-			// 前の画面に戻る
-			RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/boards/new.jsp");
-			rd.forward(request, response);
-		} else { // データベースに保存
-
-			em.getTransaction().begin();
-			em.persist(b);
-			em.getTransaction().commit();
-			em.close();
-			request.setAttribute("board", b);
-			request.getSession().setAttribute("flush", "送信が完了しました。");
-			response.sendRedirect(request.getContextPath() + "/boards/index");
-		}
-	}
-
-	private String getFileName(Part part) {
-		String filename = null;
-		for (String dispotion : part.getHeader("Content-Disposition").split(";")) {
-			if (dispotion.trim().startsWith("filename")) {
-				filename = dispotion.substring(dispotion.indexOf("=") + 1).replace("\"", "").trim();
-				filename = filename.substring(filename.lastIndexOf("\\") + 1);
-				break;
-			}
-		}
-		return filename;
-	}
+    private String getFileName(Part part) {
+        String filename = null;
+        for (String dispotion : part.getHeader("Content-Disposition").split(";")) {
+            if (dispotion.trim().startsWith("filename")) {
+                filename = dispotion.substring(dispotion.indexOf("=") + 1).replace("\"", "").trim();
+                filename = filename.substring(filename.lastIndexOf("\\") + 1);
+                break;
+            }
+        }
+        return filename;
+    }
 
 }

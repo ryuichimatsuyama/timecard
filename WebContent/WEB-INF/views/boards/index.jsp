@@ -21,7 +21,17 @@
                         <fmt:formatDate value="${board.created_at}" pattern="yyyy-MM-dd HH:mm"/>
                         <p><c:out value="${board.message}" /></p>
                         <c:if test="${!empty board.file }">
-                                                <p><img src="<c:url value="/images/${board.file}"/>"></p>
+                                                <p>
+                                                                                <c:choose>
+                                    <c:when test="${board.file != null}">
+                                        <img src="https://ryuichilaos.s3-ap-northeast-1.amazonaws.com/images/${board.file}"
+                                            style="width: 30%">
+                                    </c:when>
+                                    <c:otherwise>
+                                    画像はありません。
+                                    </c:otherwise>
+                                </c:choose>
+                                               <!--  <img src="<c:url value="/images/${board.file}"/>"></p>-->
                                                 </c:if>
                         </div>
                         </c:forEach>
