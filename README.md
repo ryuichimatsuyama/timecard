@@ -51,6 +51,7 @@ timecardは以下の機能を実装しています。
 # 使用方法
 動画をご確認ください。
 管理者のパスワードと番号は222です。
+無料版のため起動に30秒程かかります。
 
 ## Heroku URL
 https://servlet-timecard.herokuapp.com/
