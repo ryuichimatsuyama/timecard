@@ -1,4 +1,4 @@
-FROM mysql:5.7.25
+FROM mysql:5.7.31
 LABEL "Project"="timecard"
 LABEL "Author"="Ryuichi"
 
