@@ -1,0 +1,25 @@
+version: '3'
+services:
+  timecarddb:
+    image: ryuichilaos/timecarddb:V1
+    ports:
+      - "3306:3306"
+    volumes:
+      - timecarddbdata:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD="mespass"
+
+  timecard:
+    image: ryuichilaos/timecarddb:V1
+    ports:
+      - "8080:8080"
+    volumes:
+      - timecardappdata:/usr/local/tomcat/webapps
+
+  timecardweb:
+    image: ryuichilaos/timecardweb:V1
+    ports:
+      - "80:80"
+volumes:
+  timecarddbdata: {}
+  timecardappdata: {}
