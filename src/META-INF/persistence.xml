@@ -10,8 +10,8 @@
     <properties>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
             <property name="javax.persistence.jdbc.user" value="root"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://timecarddb:3306/mesuser?useSSL=false&useUnicode=true&characterEncoding=utf8"/>
-            <property name="javax.persistence.jdbc.password" value="mespass"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://timecarddb:3306/timecard?useSSL=false;useUnicode=true;characterEncoding=utf8"/>
+            <property name="javax.persistence.jdbc.password" value="timepass"/>
       <property name="javax.persistence.schema-generation.database.action" value="create"/>
       <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
       <property name="hibernate.show_sql" value="true"/>
