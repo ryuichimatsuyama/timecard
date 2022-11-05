@@ -2,7 +2,7 @@ FROM tomcat:8-jre8
 LABEL "Project"="timecard"
 LABEL "Author"="Ryuichi"
 
-RUN rm -rf /ur/local/tomcat/webapps/*
+RUN rm -rf /usr/local/tomcat/webapps/*
 COPY timecard.war usr/local/tomcat/webapps/ROOT.war
 
 EXPOSE 8080
