@@ -7,7 +7,7 @@ services:
     volumes:
       - timecarddbdata:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD="timepass"
+      - MYSQL_ROOT_PASSWORD=timepass
 
   timecard:
     image: ryuichilaos/timecardapp:V1
