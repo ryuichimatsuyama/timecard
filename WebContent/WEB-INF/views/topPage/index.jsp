@@ -14,7 +14,6 @@
                 <h3>【自分の勤怠　一覧】</h3>
         <table id="card_list">
             <tbody>
-
                                                 <tr>
                     <th class="card_name">提出先</th>
                     <th class="card_date">日付</th>
@@ -30,9 +29,10 @@
 
                 <c:forEach var="card" items="${cards}" varStatus="status">
                     <tr class="row${status.count % 2}">
+
                         <td class="card_name"><c:out value="${card.boss.name}" /></td>
-                        <td class="card_date"><fmt:formatDate value='${card.work_date}' pattern='MM-dd' /></td>
-                        <td class="card_start">${card.start}</td>
+                       <td class="card_date"><fmt:formatDate value='${card.work_date}' pattern='MM-dd' /></td>
+                        <td class="card_start">${card.start }</td>
                         <td class="card_end">${card.end}</td>
                         <td class="card_break">${card.employee.break_time }</td>
                         <td class="card_work_minutes">${card.work_minutes}</td>
@@ -52,7 +52,6 @@
                         <c:otherwise><td class="card_action">退勤済</c:otherwise>
                         </c:choose>
                     </tr>
-
                 </c:forEach>
             </tbody>
         </table>

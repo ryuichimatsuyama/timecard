@@ -30,16 +30,17 @@ import javax.persistence.Table;
 @Entity
 
 public class Card {
-    @Id
+
+	@Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    //作成者
+	//作成者
     @ManyToOne
     @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee;
 
-    @Column(name = "work_date", nullable = false)
+	@Column(name = "work_date", nullable = false)
     private Date work_date;
     //	承認者
     @OneToOne
@@ -130,5 +131,4 @@ public class Card {
     public void setEnd(String end) {
         this.end = end;
     }
-
 }

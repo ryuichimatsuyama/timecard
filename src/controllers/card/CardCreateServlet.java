@@ -52,6 +52,7 @@ public class CardCreateServlet extends HttpServlet {
             // 現在日時をセット
             Date work_date = new Date(System.currentTimeMillis());
             r.setWork_date(work_date);
+
             // 出勤時間をセット
             r.setStart(request.getParameter("start"));
             // 出勤すると状態は未承認になる
@@ -96,4 +97,5 @@ public class CardCreateServlet extends HttpServlet {
         }
 
     }
+
 }

@@ -43,8 +43,8 @@ public class MessageShowServlet extends HttpServlet {
         // 該当のIDの従業員1件のみをデータベースから取得
         Employee e = em.find(Employee.class, Integer.parseInt(request.getParameter("id")));
         //		相手と自分のみのメッセージのみ
-        List<Message> messages = em.createNamedQuery("getOurMessages", Message.class).setParameter("send", e)
-                .setParameter("get", login_employee).setParameter("send", login_employee).setParameter("get", e)
+        List<Message> messages = em.createNamedQuery("getOurMessages", Message.class)
+           .setParameter("send", login_employee).setParameter("get", e)
                 .getResultList();
         // DAOの破棄
         em.close();
