@@ -17,11 +17,6 @@ spec:
       containers:
         - name: timedb
           image: ryuichilaos/timecarddb:V1
-          args:
-            - "--ignore-db-dir=lost+found"
-          volumeMounts:
-            - mountPath: /var/lib/mysql
-              name: time-db-data
           ports:
             - name: timedb-port
               containerPort: 3306
@@ -31,10 +26,3 @@ spec:
                 secretKeyRef:
                   name: app-secret
                   key: db-pass
-      nodeSelector:
-        zone: ap-northeast-1a
-      volumes:
-        - name: time-db-data
-          awsElasticBlockStore:
-            volumeID: vol-0c14cb145ce347862
-            fsType: ext4
