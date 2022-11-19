@@ -18,8 +18,8 @@ spec:
         - name: timeapp
           image: ryuichilaos/timecardapp:V1
           ports:
-            - name: timeapp-port
-              containerPort: 8080
+             - name: timeapp-port
+               containerPort: 8080
         initContainers:
          - name: init-mydb
            image: busybox
