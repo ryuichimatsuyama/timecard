@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: timedb
+  labels:
+    app: timedb
+spec:
+  selector:
+    matchLabels:
+      app: timedb
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: timedb
+    spec:
+      containers:
+        - name: timedb
+          image: ryuichilaos/timecarddb:V1
+          args:
+            - "ignore-db-dir=lost+found"
+          volumeMounts:
+            - mountPath: /var/lib/mysql
+              name: time-db-data
+          ports:
+            - name: timedb-port
+          　　 containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: db-pass
+      nodeSelector:
+        zone: ap-northeast-1a
+      volumes:
+        - name: time-db-data
+          awsElasticBlockStore:
+            volumeID: vol-02aa0b20ab1b3a85b
+            fsType: ext4
