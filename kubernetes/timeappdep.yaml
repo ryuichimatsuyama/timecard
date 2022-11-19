@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: timeapp
+  labels:
+    app: timeapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: timeapp
+  template:
+    metadata:
+      labels:
+        app: timeapp
+    spec:
+      containers:
+        - name: timeapp
+          image: ryuichilaos/timecardapp:V1
+          ports:
+            - name: timeapp-port
+              containerPort: 8080
+       initContainers:
+         - name: init-mydb
+           image: busybox
+           command: ['sh', '-c', 'until nslookup vprodb; do echo waiting for mydb; sleep 2; done;']
