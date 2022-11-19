@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: timeapp
-          image: ryuichilaos/timecardapp:V1
+          image: {{ .Values.appimage }}
           ports:
              - name: timeapp-port
                containerPort: 8080
