@@ -23,4 +23,4 @@ spec:
       initContainers:
          - name: init-mydb
            image: busybox
-           command: ['sh', '-c', 'until nslookup vprodb; do echo waiting for mydb; sleep 2; done;']
+           command: ['sh', '-c', 'until nslookup timedb; do echo waiting for mydb; sleep 2; done;']
