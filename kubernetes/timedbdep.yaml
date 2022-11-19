@@ -24,7 +24,7 @@ spec:
               name: time-db-data
           ports:
             - name: timedb-port
-          　　 containerPort: 3306
+              containerPort: 3306
           env:
             - name: MYSQL_ROOT_PASSWORD
               valueFrom:
