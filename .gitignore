@@ -20,4 +20,4 @@ Thumbs.db
 .DS_Store
 
 # Application Properties
-WebContent/META-INF/application.properties
+#WebContent/META-INF/application.properties
