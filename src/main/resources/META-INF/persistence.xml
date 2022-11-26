@@ -10,13 +10,16 @@
     <properties>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
             <property name="javax.persistence.jdbc.user" value="root"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://compose-timecarddb-1:3306/timecard?autoReconnect=true&amp;useSSL=false&amp;useUnicode=true&amp;characterEncoding=utf8"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:mysql://compose-timecarddb-1:3306/timecard?useSSL=false&amp;useUnicode=true&amp;characterEncoding=utf8"/>
       <property name="javax.persistence.schema-generation.database.action" value="create"/>
       <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
       <property name="hibernate.show_sql" value="true"/>
       <property name="hibernate.format_sql" value="true"/>
       <property name="javax.persistence.jdbc.password" value="timepass"/>
-
+      <property name="validationQuery" value="SELECT 1 FROM DUAL" />
+      <property name="testOnBorrow" value="true" />
+      <property name="testWhileIdle" value="true" />
+      <property name="timeBetweenEvictionRunsMillis" value="60000" />
     </properties>
   </persistence-unit>
 </persistence>
