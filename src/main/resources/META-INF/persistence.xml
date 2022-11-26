@@ -16,10 +16,10 @@
       <property name="hibernate.show_sql" value="true"/>
       <property name="hibernate.format_sql" value="true"/>
       <property name="javax.persistence.jdbc.password" value="timepass"/>
-      <property name="validationQuery" value="SELECT 1 FROM DUAL" />
-      <property name="testOnBorrow" value="true" />
-      <property name="testWhileIdle" value="true" />
-      <property name="timeBetweenEvictionRunsMillis" value="60000" />
+      <property name="hibernate.c3p0.min_size" value="5" />
+      <property name="hibernate.c3p0.max_size" value="20" />
+      <property name="hibernate.c3p0.timeout" value="300" />
+
     </properties>
   </persistence-unit>
 </persistence>
