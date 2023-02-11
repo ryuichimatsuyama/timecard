@@ -24,7 +24,7 @@
                                                 <p>
                                                                                 <c:choose>
                                     <c:when test="${board.file != null}">
-                                        <img src="https://ryuichilaos.s3-ap-northeast-1.amazonaws.com/images/${board.file}"
+                                        <img src="${board.file}"
                                             style="width: 30%">
                                     </c:when>
                                     <c:otherwise>

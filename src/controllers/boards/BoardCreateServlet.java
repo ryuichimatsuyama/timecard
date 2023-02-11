@@ -1,10 +1,11 @@
 package controllers.boards;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import models.Board;
+import models.Employee;
+import utils.DBUtil;
 
 import javax.persistence.EntityManager;
 import javax.servlet.RequestDispatcher;
@@ -15,16 +16,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
-
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-
-import models.Board;
-import models.Employee;
-import utils.DBUtil;
+import java.io.File;
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Servlet implementation class BoardCreateServlet
@@ -70,19 +66,11 @@ public class BoardCreateServlet extends HttpServlet {
             part.write(filePath);
             /* S3 */
             String region = (String) this.getServletContext().getAttribute("region");
-            String awsAccessKey = (String) this.getServletContext().getAttribute("awsAccessKey");
-            String awsSecretKey = (String) this.getServletContext().getAttribute("awsSecretKey");
             String bucketName = (String) this.getServletContext().getAttribute("bucketName");
-            // 認証情報を用意
-            AWSCredentials credentials = new BasicAWSCredentials(
-                    // アクセスキー
-                    awsAccessKey,
-                    // シークレットキー
-                    awsSecretKey);
             // クライアントを生成
             AmazonS3 s3 = AmazonS3ClientBuilder.standard()
                     // 認証情報を設定
-                    .withCredentials(new AWSStaticCredentialsProvider(credentials))
+                    .withCredentials(new ProfileCredentialsProvider())
                     // リージョンを AP_NORTHEAST_1(東京) に設定
                     .withRegion(region).build();
             // === ファイルから直接アップロードする場合 ===
