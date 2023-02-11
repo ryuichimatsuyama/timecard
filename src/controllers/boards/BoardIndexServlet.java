@@ -3,7 +3,6 @@ package controllers.boards;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.HttpMethod;
 import com.amazonaws.SdkClientException;
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
@@ -55,7 +54,6 @@ public class BoardIndexServlet extends HttpServlet {
             try {
                 AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
                         .withRegion(clientRegion)
-                        .withCredentials(new ProfileCredentialsProvider())
                         .build();
 
                 // Set the presigned URL to expire after one hour.

@@ -1,6 +1,5 @@
 package controllers.boards;
 
-import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import models.Board;
@@ -69,8 +68,6 @@ public class BoardCreateServlet extends HttpServlet {
             String bucketName = (String) this.getServletContext().getAttribute("bucketName");
             // クライアントを生成
             AmazonS3 s3 = AmazonS3ClientBuilder.standard()
-                    // 認証情報を設定
-                    .withCredentials(new ProfileCredentialsProvider())
                     // リージョンを AP_NORTHEAST_1(東京) に設定
                     .withRegion(region).build();
             // === ファイルから直接アップロードする場合 ===
