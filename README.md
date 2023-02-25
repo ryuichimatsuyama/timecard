@@ -74,7 +74,7 @@ timecardは以下の機能を実装しています。
 管理者のパスワードと番号は222です。
 
 ## URL
-https://timecard.ryuichilaos.com/
+https://time.ryuichilaos.com/
 
 ## 動画
 - 打刻機能
